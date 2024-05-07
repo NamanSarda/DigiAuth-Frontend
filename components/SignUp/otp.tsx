@@ -10,6 +10,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import Image from "next/image";
+import logo from "../../assets/Logo(DigiAuth).png";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import {
@@ -80,44 +82,68 @@ export default function OtpForm({ email, role }: tInputParams) {
   });
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>OTP</FormLabel>
-                  <FormControl>
-                    <InputOTP maxLength={6} {...field}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                      </InputOTPGroup>
-                      <InputOTPSeparator />
-                      <InputOTPGroup>
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          {errorMessage && (
-            <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-          )}
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Sending OTP" : "Send OTP"}
-          </Button>
-        </form>
-      </Form>
-    </>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      <div className="flex items-center justify-between w-full max-w-4xl px-6">
+        <div className="flex flex-col items-start">
+          <div className="relative">
+            <Image src={logo} alt="Logo" height={300} width={300} />
+          </div>
+        </div>
+        <div className="w-px h-100 bg-gray-300" />
+        <div
+          className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]"
+          // style={{ background: #117685 }}
+        >
+          <div className="mb-8 flex space-x-4"></div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-white mb-4">OTP</FormLabel>
+                      <FormControl>
+                        <InputOTP
+                          maxLength={6}
+                          {...field}
+                          className="text-white"
+                        >
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} className="text-white" />
+                            <InputOTPSlot index={1} className="text-white" />
+                            <InputOTPSlot index={2} className="text-white" />
+                          </InputOTPGroup>
+                          <InputOTPSeparator />
+                          <InputOTPGroup>
+                            <InputOTPSlot index={3} className="text-white" />
+                            <InputOTPSlot index={4} className="text-white" />
+                            <InputOTPSlot index={5} className="text-white" />
+                          </InputOTPGroup>
+                        </InputOTP>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              {errorMessage && (
+                <div className=" mt-5 my-[2vh] text-[#FF0000]">
+                  {errorMessage}
+                </div>
+              )}
+              <Button
+                type="submit"
+                className="mt-5 bg-[#2E8A99] flex justify-center"
+                disabled={isLoading}
+              >
+                {isLoading ? "Sending OTP" : "Send OTP"}
+              </Button>
+            </form>
+          </Form>
+        </div>
+      </div>
+    </div>
   );
 }
