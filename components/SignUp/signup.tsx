@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,6 +30,7 @@ const formSchema = z.object({
 });
 
 export default function SignupForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -37,7 +39,7 @@ export default function SignupForm() {
     setErrorMessage("");
     try {
       const response = await fetch(
-        "https://vxubebqr2b.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/register",
+        "https://dtn13bamx7.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/register",
         {
           method: "POST",
           headers: {
@@ -47,10 +49,15 @@ export default function SignupForm() {
         }
       );
 
-      if (response.ok) {
+      if (response.status == 201) {
         const responseData = await response.json();
         console.log("API response:", responseData);
-        form.reset();
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("token", "token");
+        // router.push(`./signup/otp?email=${data.email}&role=${data.role}`);
+        router.push(`./signup/otp`);
+        // form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission
         console.error("API request failed with status:", response.status);

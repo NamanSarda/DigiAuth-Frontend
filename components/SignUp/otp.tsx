@@ -10,45 +10,55 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "../ui/input-otp";
+import { useRouter } from "next/navigation";
+type tInputParams = {
+  email: string;
+  role: string;
+};
+type tReqData = {
+  otp: string | null;
+  email: string | null;
+};
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  role: z.enum(["User", "Issuer", "Verifier"]),
+  otp: z.string().min(6, {
+    message: "Your one-time password must be 6 characters.",
+  }),
 });
 
-export default function SignupForm() {
+export default function OtpForm({ email, role }: tInputParams) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
+  const router = useRouter();
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    const reqData: tReqData = { ...data, email: email };
     setIsLoading(true);
+    console.log(reqData);
     setErrorMessage("");
     try {
       const response = await fetch(
-        "https://vxubebqr2b.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/register",
+        "https://dtn13bamx7.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/otp",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(reqData),
         }
       );
 
-      if (response.ok) {
+      if (response.status == 200) {
         const responseData = await response.json();
         console.log("API response:", responseData);
+        router.push(`../${role.toLowerCase}`);
         form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission
@@ -65,8 +75,7 @@ export default function SignupForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      otp: "",
     },
   });
 
@@ -76,62 +85,25 @@ export default function SignupForm() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormField
             control={form.control}
-            name="email"
+            name="otp"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>OTP</FormLabel>
                   <FormControl>
-                    <Input
-                      required
-                      placeholder="Email"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel className="align-left">Role</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role"></SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="User">User</SelectItem>
-                      <SelectItem value="Issuer">Issuer</SelectItem>
-                      <SelectItem value="Verifier">Verifier</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Password"
-                      required
-                      type="password"
-                      {...field}
-                    />
+                    <InputOTP maxLength={6} {...field}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,10 +112,9 @@ export default function SignupForm() {
           />
           {errorMessage && (
             <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-          )}{" "}
-          {/* Display error message if there's any */}
+          )}
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Adding device..." : "Add Device"}
+            {isLoading ? "Sending OTP" : "Send OTP"}
           </Button>
         </form>
       </Form>
