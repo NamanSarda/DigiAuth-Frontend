@@ -13,14 +13,21 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  role: z.enum(["User", "Issuer", "Verifier"]),
 });
 
-export default function LoginForm() {
+export default function SignupForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -89,6 +96,30 @@ export default function LoginForm() {
           />
           <FormField
             control={form.control}
+            name="role"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel className="align-left">Role</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role"></SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Issuer">Issuer</SelectItem>
+                      <SelectItem value="Verifier">Verifier</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => {
               return (
@@ -110,14 +141,12 @@ export default function LoginForm() {
           {errorMessage && (
             <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
           )}{" "}
+          {/* Display error message if there's any */}
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Logging in" : "Login"}
+            {isLoading ? "Adding device..." : "Add Device"}
           </Button>
         </form>
       </Form>
-      <h1>
-        Don't have a account? <Link href="./signup">SignUp</Link>
-      </h1>
     </>
   );
 }

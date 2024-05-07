@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -33,7 +34,6 @@ export default function SignupForm() {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    console.log(data);
     setErrorMessage("");
     try {
       const response = await fetch(
@@ -144,10 +144,13 @@ export default function SignupForm() {
           )}{" "}
           {/* Display error message if there's any */}
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Adding device..." : "Add Device"}
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </Button>
         </form>
       </Form>
+      <h1>
+        Already have a account? <Link href="./login">Login</Link>
+      </h1>
     </>
   );
 }
