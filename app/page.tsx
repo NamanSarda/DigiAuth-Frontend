@@ -11,7 +11,7 @@ export default function Home() {
     const role = localStorage.getItem("role");
 
     if (token !== null) {
-      router.push(`/${role}`);
+      router.push(`/${role?.toLowerCase()}`);
     }
   }, [router]);
 

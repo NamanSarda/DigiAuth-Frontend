@@ -2,7 +2,6 @@
 export default function page() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
-  console.log(token + " " + role);
-  if (token !== null && role === "User") return <>User</>;
+  if (token !== null && role === "Issuer") return <>Issuer connect</>;
   else return <>ur not authorised</>;
 }
