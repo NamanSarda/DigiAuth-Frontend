@@ -13,14 +13,24 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email(),
-    password: z.string().min(3),
-    role: z.string(),
+  password: z.string().min(8),
+  role: z.enum(["User", "Issuer", "Verifier"]),
 });
 
 export default function SignupForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -28,18 +38,26 @@ export default function SignupForm() {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const response = await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://dtn13bamx7.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
-      if (response.ok) {
+      if (response.status == 201) {
         const responseData = await response.json();
         console.log("API response:", responseData);
-        form.reset();
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("role", data.role);
+        localStorage.setItem("token", "token");
+        // router.push(`./signup/otp?email=${data.email}&role=${data.role}`);
+        router.push(`./signup/otp`);
+        // form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission
         console.error("API request failed with status:", response.status);
@@ -55,8 +73,7 @@ export default function SignupForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      url: "",
+      email: "",
       password: "",
     },
   });
@@ -67,16 +84,16 @@ export default function SignupForm() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormField
             control={form.control}
-            name="name"
+            name="email"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Setup Name</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       required
-                      placeholder="Setup Name"
-                      type="name"
+                      placeholder="Email"
+                      type="email"
                       {...field}
                     />
                   </FormControl>
@@ -87,14 +104,23 @@ export default function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="url"
+            name="role"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel className="align-left">URL</FormLabel>
-                  <FormControl>
-                    <Input required placeholder="URL" type="url" {...field} />
-                  </FormControl>
+                  <FormLabel className="align-left">Role</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role"></SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Issuer">Issuer</SelectItem>
+                      <SelectItem value="Verifier">Verifier</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               );
@@ -125,10 +151,13 @@ export default function SignupForm() {
           )}{" "}
           {/* Display error message if there's any */}
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Adding device..." : "Add Device"}
+            {isLoading ? "Signing Up..." : "Sign Up"}
           </Button>
         </form>
       </Form>
+      <h1>
+        Already have a account? <Link href="./login">Login</Link>
+      </h1>
     </>
   );
 }
