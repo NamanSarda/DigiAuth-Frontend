@@ -13,11 +13,18 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const formSchema = z.object({
   email: z.string().email(),
-    password: z.string().min(3),
-    role: z.string(),
+  password: z.string().min(8),
+  role: z.enum(["User", "Issuer", "Verifier"]),
 });
 
 export default function SignupForm() {
@@ -26,15 +33,19 @@ export default function SignupForm() {
 
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    console.log(data);
     setErrorMessage("");
     try {
-      const response = await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://vxubebqr2b.execute-api.ap-south-1.amazonaws.com/prod/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
@@ -55,8 +66,7 @@ export default function SignupForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      url: "",
+      email: "",
       password: "",
     },
   });
@@ -67,16 +77,16 @@ export default function SignupForm() {
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormField
             control={form.control}
-            name="name"
+            name="email"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Setup Name</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
                       required
-                      placeholder="Setup Name"
-                      type="name"
+                      placeholder="Email"
+                      type="email"
                       {...field}
                     />
                   </FormControl>
@@ -87,14 +97,23 @@ export default function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="url"
+            name="role"
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel className="align-left">URL</FormLabel>
-                  <FormControl>
-                    <Input required placeholder="URL" type="url" {...field} />
-                  </FormControl>
+                  <FormLabel className="align-left">Role</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role"></SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="User">User</SelectItem>
+                      <SelectItem value="Issuer">Issuer</SelectItem>
+                      <SelectItem value="Verifier">Verifier</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               );
