@@ -7,7 +7,7 @@ interface ComponentProps {
   role: string;
 }
 
-const Component: FC<ComponentProps> = () => {
+const Dashboard: FC<ComponentProps> = ({ role }) => {
   // const [activeTab, setActiveTab] = useState<string>("connection");
   const [activeNav, setActiveNav] = useState<string>("");
 
@@ -20,7 +20,7 @@ const Component: FC<ComponentProps> = () => {
 };
 
 // Export component
-export default Component;
+export default Dashboard;
 
 // interface IconProps {
 //   className: string;
