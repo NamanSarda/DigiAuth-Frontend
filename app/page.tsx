@@ -1,11 +1,19 @@
+"use client";
+import { useEffect } from "react";
 import LoginForm from "@/components/Login/login";
-import SignupForm from "@/components/SignUp/signup";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <>
-      <LoginForm />
-      <SignupForm/>
-    </>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token !== null) {
+      router.push(`/${role}`);
+    }
+  }, [router]);
+
+  return <>{localStorage.getItem("token") == null && <LoginForm />}</>;
 }
