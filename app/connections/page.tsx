@@ -93,7 +93,7 @@ const Component: FC<ComponentProps> = () => {
                 alt="Logo"
                 className="h-10"
                 height="40"
-                src="/Logo(DigiAuth).png"
+                src="/DigiAuth-Frontend/assets/Logo(DigiAuth).png"
                 style={{
                   aspectRatio: "100/40",
                   objectFit: "cover",
@@ -102,7 +102,7 @@ const Component: FC<ComponentProps> = () => {
               />
             </div>
           </div>
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <h1 className="text-white text-lg font-semibold">ISSUER</h1>
           </div>
           <nav className="space-y-4">

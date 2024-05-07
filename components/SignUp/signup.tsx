@@ -10,6 +10,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import Image from "next/image";
+import logo from "../../assets/Logo(DigiAuth).png";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -79,85 +81,107 @@ export default function SignupForm() {
   });
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      required
-                      placeholder="Email"
-                      type="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel className="align-left">Role</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a role"></SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="User">User</SelectItem>
-                      <SelectItem value="Issuer">Issuer</SelectItem>
-                      <SelectItem value="Verifier">Verifier</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => {
-              return (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Password"
-                      required
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              );
-            }}
-          />
-          {errorMessage && (
-            <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-          )}{" "}
-          {/* Display error message if there's any */}
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Signing Up..." : "Sign Up"}
-          </Button>
-        </form>
-      </Form>
-      <h1>
-        Already have a account? <Link href="./login">Login</Link>
-      </h1>
-    </>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      <div className="flex items-center justify-between w-full max-w-4xl px-6">
+        <div className="flex flex-col items-start">
+          <div className="relative">
+            <Image src={logo} alt="Logo" height={300} width={300} />
+          </div>
+        </div>
+        <div className="w-px h-100 bg-gray-300" />
+        <div
+          className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]"
+          // style={{ background: #117685 }}
+        >
+          <div className="mb-8 flex space-x-4"></div>
+          <h1 className="text-white text-2xl mb-4 flex justify-center">
+            SIGNUP
+          </h1>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-white mb-4">Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          required
+                          placeholder="Email"
+                          type="email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="align-left text-white mb-4">
+                        Role
+                      </FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a role"></SelectValue>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="User">User</SelectItem>
+                          <SelectItem value="Issuer">Issuer</SelectItem>
+                          <SelectItem value="Verifier">Verifier</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <FormLabel className="text-white">Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Password"
+                          required
+                          type="password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              {errorMessage && (
+                <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
+              )}{" "}
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="mt-6 bg-[#2E8A99] flex justify-center"
+              >
+                {isLoading ? "Signing up" : "SignUp"}
+              </Button>
+            </form>
+          </Form>
+          <h1 className="mt-6 text-white">
+            {`Already have an account?`} <Link href="./login">Login</Link>
+          </h1>
+        </div>
+      </div>
+    </div>
   );
 }
