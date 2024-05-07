@@ -53,11 +53,12 @@ export default function LoginForm() {
 
       if (response.ok) {
         const responseData = await response.json();
-        localStorage.setItem("token", responseData.token);
+        localStorage.setItem("token", responseData.data.token);
+        // console.log(localStorage.getItem("token"));
         localStorage.setItem("email", data.email);
         localStorage.setItem("role", data.role);
         console.log("API response:", responseData);
-        router.push(`./${data.role}`);
+        router.push(`./${data.role.toLowerCase()}`);
         // form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission

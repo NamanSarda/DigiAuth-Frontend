@@ -1,25 +1,26 @@
 "use client";
-
 import { FC, useState } from "react"; // Import FC type from React
 import SideBar from "@/components/Common/Sidebar/Sidebar";
 import NavBar from "@/components/Common/NavBar/NavBar";
 
-interface ComponentProps {}
+interface ComponentProps {
+  role: string;
+}
 
-const Component: FC<ComponentProps> = () => {
+const Dashboard: FC<ComponentProps> = ({ role }) => {
   // const [activeTab, setActiveTab] = useState<string>("connection");
   const [activeNav, setActiveNav] = useState<string>("");
-  
+
   return (
     <div className="flex h-screen">
-      <SideBar activeNav={activeNav} setActiveNav={setActiveNav} />
-      <NavBar activeNav={activeNav} />
+      <SideBar role={role} activeNav={activeNav} setActiveNav={setActiveNav} />
+      <NavBar role={role} activeNav={activeNav} />
     </div>
   );
 };
 
 // Export component
-export default Component;
+export default Dashboard;
 
 // interface IconProps {
 //   className: string;
