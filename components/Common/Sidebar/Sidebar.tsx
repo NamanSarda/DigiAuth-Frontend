@@ -3,11 +3,16 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface SideBarProps {
+  role: string;
   activeNav: string;
   setActiveNav: (nav: string) => void;
 }
 
-export default function SideBar({ activeNav, setActiveNav }: SideBarProps) {
+export default function SideBar({
+  role,
+  activeNav,
+  setActiveNav,
+}: SideBarProps) {
   return (
     <>
       <div className="flex h-screen">
