@@ -1,5 +1,5 @@
 "use client";
-import OtpForm from "@/components/SignUp/otp";
+import OtpForm from "@/components/Auth/SignUp/otp";
 // import { useSearchParams } from "next/navigation";
 export default function Home() {
   // const searchParams = useSearchParams();

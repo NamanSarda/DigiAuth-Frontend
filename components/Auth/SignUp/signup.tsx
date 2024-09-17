@@ -9,11 +9,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../../ui/form";
 import Image from "next/image";
-import logo from "../../assets/Logo(DigiAuth).png";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import logo from "@/assets/Logo(DigiAuth).png";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { useState } from "react";
 import {
   Select,
@@ -21,7 +21,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

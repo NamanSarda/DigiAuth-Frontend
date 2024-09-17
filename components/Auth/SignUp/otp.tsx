@@ -9,17 +9,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "../../ui/form";
 import Image from "next/image";
-import logo from "../../assets/Logo(DigiAuth).png";
-import { Button } from "../ui/button";
+import logo from "@/assets/Logo(DigiAuth).png";
+import { Button } from "../../ui/button";
 import { useState } from "react";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "../ui/input-otp";
+} from "../../ui/input-otp";
 import { useRouter } from "next/navigation";
 type tInputParams = {
   email: string;
@@ -60,7 +60,7 @@ export default function OtpForm({ email, role }: tInputParams) {
       if (response.status == 200) {
         const responseData = await response.json();
         console.log("API response:", responseData);
-        router.push(`../${role.toLowerCase}`);
+        router.push(`../${role.toLowerCase()}`);
         form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission

@@ -17,7 +17,7 @@ const Component: FC<ComponentProps> = () => {
         activeNav={activeNav}
         setActiveNav={setActiveNav}
       />
-      <NavBar role="Verifier" activeNav={activeNav} />
+      <NavBar role="Issuer" activeNav={activeNav} />
     </div>
   );
 };

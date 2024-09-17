@@ -1,10 +1,10 @@
 "use client";
 import { FC, useState } from "react"; // Import FC type from React
 import SideBar from "@/components/Common/Sidebar/Sidebar";
-import NavBar from "@/components/Common/NavBar/NavBar";
+import NavBar from "@/components/Common/NavBar/Navbar";
 
 interface ComponentProps {
-  role: string;
+  role: string | null;
 }
 
 const Dashboard: FC<ComponentProps> = ({ role }) => {

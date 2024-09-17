@@ -8,11 +8,12 @@ export default function page() {
   console.log(
     localStorage.getItem("token") + " " + localStorage.getItem("role")
   );
-  if (token !== null && role === "Issuer")
-    return (
-      <>
-        <Dashboard role={role} />;
-      </>
-    );
-  else return <>ur not authorised</>;
+  // if (token !== null && token !== "undefined" && role === "Issuer")
+  return (
+    <>
+      {/* <Dashboard role={role} />; */}
+      <Dashboard role="Issuer" />;
+    </>
+  );
+  // else return <>ur not authorised</>;
 }

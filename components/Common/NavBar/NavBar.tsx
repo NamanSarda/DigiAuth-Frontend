@@ -1,32 +1,26 @@
-import { Input } from "@/components/ui/input";
-import ConnectionNavBar from "../Connection/Sections/NavBar/ConnectionNavbar";
+import { useMemo } from "react";
+import Image from "next/image";
+import UserNavBar from "@/components/Roles/User/NavBar/UserNavBar";
 
-type TactiveNav = {
+import IssuerNavBar from "@/components/Roles/Issuer/NavBar/IssuerNavBar";
+import VerifierNavBar from "@/components/Roles/Verifier/NavBar/VerifierNavBar";
+interface NavBarProps {
+  role: string | null;
   activeNav: string;
-  role: string;
-};
-
-export default function NavBar({ role, activeNav }: TactiveNav) {
-  return (
-    <>
-      <div className="flex-1 bg-[#E5E5E5]">
-        <div className="flex items-center justify-between bg-white p-4 shadow-md">
-          <div className="w-1/2 flex justify-center">
-            <Input className="w-3/4" placeholder="Search" />
-          </div>
-          <div className="flex items-center space-x-4">Logo</div>
-        </div>
-        <div className="p-6">
-          {activeNav === "Connections" && <ConnectionNavBar />}
-          {activeNav === "Schema" && <SchemaNav />}
-          {activeNav === "Issuance" && <IssuanceNav />}
-          {activeNav === "Revocation" && <RevocationNav />}
-        </div>
-      </div>
-    </>
-  );
 }
+export default function NavBar({ role, activeNav }: NavBarProps) {
+  const renderRoleNavBar = useMemo(() => {
+    switch (role) {
+      case "User":
+        return <UserNavBar activeNav={activeNav} role={role} />;
+      case "Issuer":
+        return <IssuerNavBar activeNav={activeNav} role={role} />;
+      case "Verifier":
+        return <VerifierNavBar activeNav={activeNav} role={role} />;
+      default:
+        return null;
+    }
+  }, [role, activeNav]);
 
-const SchemaNav = () => <div>SchemaNav</div>;
-const IssuanceNav = () => <div>IssuanceNav</div>;
-const RevocationNav = () => <div>RevocationNav</div>;
+  return <>{renderRoleNavBar}</>;
+}

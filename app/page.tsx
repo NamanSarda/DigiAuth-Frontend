@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import LoginForm from "@/components/Login/login";
+import LoginForm from "@/components/Auth/Login/login";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -10,10 +10,10 @@ export default function Home() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
-    if (token !== null) {
+    if (token !== null && token !== "undefined") {
       router.push(`/${role?.toLowerCase()}`);
     }
   }, [router]);
 
-  return <>{localStorage.getItem("token") == null && <LoginForm />}</>;
+  return <>{<LoginForm />}</>;
 }
