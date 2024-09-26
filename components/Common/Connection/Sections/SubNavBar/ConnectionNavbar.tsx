@@ -58,7 +58,13 @@ const ConnectionNavBar = () => {
           </Button>
         </div>
       </Tabs>
-      <div className="grid grid-cols-2 gap-4">{renderConnectionCards}</div>
+      <div
+        className="grid
+        gap-4"
+      >
+        {/* grid-cols-2 */}
+        {renderConnectionCards}
+      </div>
     </div>
   );
 };

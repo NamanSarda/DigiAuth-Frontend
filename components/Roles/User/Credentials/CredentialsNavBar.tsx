@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs } from "@/components/ui/tabs";
-import Issued from "./Credentials";
+import Credentials from "./Credentials";
 
 // Define a type for the possible tab keys
 type TabKey = "active";
@@ -18,7 +18,7 @@ const CredentialNav = () => {
   // Define the sections with explicit type
   const renderConnectionCards = useMemo(() => {
     const sections: Record<TabKey, JSX.Element> = {
-      active: <Issued />,
+      active: <Credentials />,
     };
 
     return sections[activeTab];
@@ -39,7 +39,7 @@ const CredentialNav = () => {
           </Button>
         </div>
       </Tabs>
-      <div className="grid grid-cols-2 gap-4">{renderConnectionCards}</div>
+      <div className="grid gap-4">{renderConnectionCards}</div>
     </div>
   );
 };

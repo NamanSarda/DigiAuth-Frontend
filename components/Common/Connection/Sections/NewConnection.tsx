@@ -30,8 +30,7 @@ export default function NewConnection() {
             Accept New Invitation
           </Button>
         </div>
-        {/* Rendered form below buttons */}
-        <div className="items-center">{render}</div>
+        <div className="mt-[5rem] items-center">{render}</div>
       </div>
     </>
   );

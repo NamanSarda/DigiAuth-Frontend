@@ -1,158 +1,61 @@
-// import React, { useState } from "react";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { useRouter } from "next/router";
-// import {
-//   Form,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormControl,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Button } from "@/components/ui/button"; // replace with actual paths
-
-// // Replace this with your actual schema validation rules
-// const formSchema = z.object({
-//   connection: z.string().nonempty("Connection is required"),
-//   schema: z.string().nonempty("Schema is required"),
-// });
-
-// export default function IssueCredentialForm() {
-//   const [isLoading, setIsLoading] = useState<boolean>(false);
-//   const [errorMessage, setErrorMessage] = useState<string>("");
-
-//   //   const router = useRouter();
-//   //   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-//   //     setIsLoading(true);
-//   //     setErrorMessage("");
-//   //     try {
-//   //       // Dummy API call for demonstration
-//   //       console.log("Selected Connection:", data.connection);
-//   //       console.log("Selected Schema:", data.schema);
-
-//   //       // Logic to handle the API request can go here.
-//   //       // After successful submission, you can redirect or show success messages.
-//   //       alert("Credential issued successfully");
-
-//   //       router.push("/success"); // Dummy redirection after submission
-//   //     } catch (error) {
-//   //       console.error("Error:", error);
-//   //       setErrorMessage("An unexpected error occurred. Please try again.");
-//   //     } finally {
-//   //       setIsLoading(false);
-//   //     }
-//   //   };
-
-//   const form = useForm<z.infer<typeof formSchema>>({
-//     resolver: zodResolver(formSchema),
-//     defaultValues: {
-//       connection: "",
-//       schema: "",
-//     },
-//   });
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-//       <div className="flex items-center justify-between w-full max-w-4xl px-6">
-//         <div className="w-full">
-//           <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
-//             <h1 className="text-white text-2xl mb-4 flex justify-center">
-//               ISSUE CREDENTIAL
-//             </h1>
-//             <Form {...form}>
-//               {/* <form onSubmit={form.handleSubmit(handleSubmit)}> */}
-//               {/* Connection Dropdown */}
-//               <FormField
-//                 control={form.control}
-//                 name="connection"
-//                 render={({ field }) => {
-//                   return (
-//                     <FormItem>
-//                       <FormLabel className="text-white mb-4">
-//                         Select Connection
-//                       </FormLabel>
-//                       <Select onValueChange={field.onChange}>
-//                         <FormControl>
-//                           <SelectTrigger>
-//                             <SelectValue placeholder="Select a connection" />
-//                           </SelectTrigger>
-//                         </FormControl>
-//                         <SelectContent>
-//                           <SelectItem value="mas123">abc (mas123)</SelectItem>
-//                         </SelectContent>
-//                       </Select>
-//                       <FormMessage />
-//                     </FormItem>
-//                   );
-//                 }}
-//               />
-
-//               {/* Schema Dropdown */}
-//               <FormField
-//                 control={form.control}
-//                 name="schema"
-//                 render={({ field }) => {
-//                   return (
-//                     <FormItem>
-//                       <FormLabel className="text-white mb-4">
-//                         Choose Schema
-//                       </FormLabel>
-//                       <Select onValueChange={field.onChange}>
-//                         <FormControl>
-//                           <SelectTrigger>
-//                             <SelectValue placeholder="Select a schema" />
-//                           </SelectTrigger>
-//                         </FormControl>
-//                         <SelectContent>
-//                           <SelectItem value="schema1">Schema 1</SelectItem>
-//                           <SelectItem value="schema2">Schema 2</SelectItem>
-//                           <SelectItem value="schema3">Schema 3</SelectItem>
-//                         </SelectContent>
-//                       </Select>
-//                       <FormMessage />
-//                     </FormItem>
-//                   );
-//                 }}
-//               />
-
-//               {/* Error Message */}
-//               {errorMessage && (
-//                 <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-//               )}
-
-//               {/* Submit Button */}
-//               <Button
-//                 type="submit"
-//                 disabled={isLoading}
-//                 className="mt-6 bg-[#2E8A99] flex justify-center"
-//               >
-//                 {isLoading ? "Issuing..." : "Issue Credential"}
-//               </Button>
-//               {/* </form> */}
-//             </Form>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+
 export default function CreateInvitationForm() {
+  const [invite, setInvite] = useState<string>(""); // Initialize as an empty string
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    //   const fetchInvite = async () => {
+    //     setLoading(true); // Set loading to true before fetching
+    //     try {
+    //       const response = await fetch("http://20.70.181.223/connections"); // Adjust the URL as needed
+    //       if (!response.ok) {
+    //         throw new Error("Network response was not ok");
+    //       }
+    //       const data = await response.json();
+    //     // setInvite(JSON.stringify(data, null, 2));
+    //       setInvite(data);
+    //     } catch (error) {
+    //       setError("Failed to create invite");
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
+
+    //   fetchConnections();
+    console.log("invite");
+  }, []);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(invite).then(() => {
+      alert("Copied to clipboard!"); // Alert user that the text has been copied
+    });
+  };
+
   return (
     <>
-      <Button className="bg-[#D9D9D9] text-black ">
-        Create New Invitation
-      </Button>
+      {loading && <p>Loading...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
+        <h1 className="text-white text-2xl mb-4 flex justify-center">
+          Invitation
+        </h1>
+        <textarea
+          readOnly
+          placeholder="Invitation Link"
+          value={invite}
+          className="w-full h-32 border rounded p-2"
+        />
+        <Button
+          disabled={invite.length < 1}
+          onClick={handleCopy}
+          className="mt-4 bg-[#2E8A99]"
+        >
+          Copy
+        </Button>
+      </div>
     </>
   );
 }

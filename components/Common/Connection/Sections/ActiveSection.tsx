@@ -19,7 +19,7 @@ export default function ActiveSection() {
   if (role === "User") url += "1025";
   else if (role === "Issuer") url += "2025";
   else if (role === "Verifier") url += "3025";
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // // Fetch connections when the component mounts
@@ -47,6 +47,7 @@ export default function ActiveSection() {
   // }, []);
 
   // // Render loading, error, or the list of connections
+  // setLoading(false);
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   const activeConnections = connections.filter(
