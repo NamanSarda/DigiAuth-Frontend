@@ -60,7 +60,8 @@ export default function OtpForm({ email, role }: tInputParams) {
       if (response.status == 200) {
         const responseData = await response.json();
         console.log("API response:", responseData);
-        router.push(`../${role.toLowerCase()}`);
+        // router.push(`../${role.toLowerCase()}`);
+        router.push(`../login`);
         form.reset();
       } else {
         setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission
@@ -138,7 +139,7 @@ export default function OtpForm({ email, role }: tInputParams) {
                 className="mt-5 bg-[#2E8A99] flex justify-center"
                 disabled={isLoading}
               >
-                {isLoading ? "Sending OTP" : "Send OTP"}
+                {isLoading ? "Verifying" : "Verify"}
               </Button>
             </form>
           </Form>
