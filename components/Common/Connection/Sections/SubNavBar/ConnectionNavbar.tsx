@@ -5,21 +5,24 @@ import PendingSection from "../PendingSection";
 import ActiveSection from "../ActiveSection";
 import NewConnection from "../NewConnection";
 
-const ConnectionNavBar = () => {
-  const [activeTab, setActiveTab] = useState("active");
+// Define a type for the possible tab keys
+type TabKey = "active" | "pending" | "new";
 
-  const handleTabClick = (tab) => {
+const ConnectionNavBar = () => {
+  const [activeTab, setActiveTab] = useState<TabKey>("active");
+
+  const handleTabClick = (tab: TabKey) => {
     setActiveTab(tab);
   };
 
   const renderConnectionCards = useMemo(() => {
-    const sections = {
+    const sections: Record<TabKey, JSX.Element> = {
       active: <ActiveSection />,
       pending: <PendingSection />,
       new: <NewConnection />,
     };
 
-    return sections[activeTab] || null;
+    return sections[activeTab];
   }, [activeTab]);
 
   return (
