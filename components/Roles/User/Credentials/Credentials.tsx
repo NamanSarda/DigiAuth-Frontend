@@ -1,13 +1,15 @@
-// {/* <CertificatesCard DID="123456" Name="abc" ID="mas123" i={2} /> */}
 import React, { useState, useEffect } from "react";
 import CredentialCard from "./CredentialsCard";
 
 // Define the shape of your Certificates data
 interface Certificate {
-  DID: string;
-  Name: string;
-  ID: string;
+  // DID: string;
+  UserName: string;
+  ConnectionID: string;
   i: number;
+  CredentialDefinition: string; // Add this line if needed for future expansions
+  IssuerName: string; // Add this line if needed for future expansions
+  Attributes: { key: string; value: string }[]; // Add this line for attributes
 }
 
 export default function Issued() {
@@ -40,7 +42,27 @@ export default function Issued() {
   //   fetchCertificates();
   // }, []);
 
-  // // Render loading, error, or the list of certificates
+  // Dummy data
+  useEffect(() => {
+    const sampleData: Certificate[] = [
+      {
+        // DID: "did:example:123456789",
+        UserName: "John Doe",
+        ConnectionID: "693a92bb-fc3f-4f99-9096-fd1328cc7820",
+        i: 1,
+        CredentialDefinition: "VBErVjLajTWdWjKPyt:3:CL:2082:default", // If applicable
+        IssuerName: "RCOEM", // If applicable
+        Attributes: [
+          { key: "SGPA", value: "9.7" },
+          { key: "CGPA", value: "9.9" },
+        ],
+      },
+    ];
+
+    setCertificates(sampleData);
+  }, []);
+
+  // Render loading, error, or the list of certificates
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>{error}</div>;
 
@@ -51,11 +73,14 @@ export default function Issued() {
       ) : (
         certificates.map((certificate) => (
           <CredentialCard
-            key={certificate.ID}
-            DID={certificate.DID}
-            Name={certificate.Name}
-            ID={certificate.ID}
+            // key={certificate.ID}
+            // DID={certificate.DID}
+            UserName={certificate.UserName}
+            ConnectionID={certificate.ConnectionID}
             i={certificate.i}
+            CredentialDefinition={certificate.CredentialDefinition}
+            IssuerName={certificate.IssuerName}
+            Attributes={certificate.Attributes} // If applicable
           />
         ))
       )}
