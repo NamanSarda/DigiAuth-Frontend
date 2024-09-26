@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, useState } from "react"; 
+import { FC, useState } from "react";
 import SideBar from "@/components/Common/Sidebar/Sidebar";
 import NavBar from "@/components/Common/NavBar/Navbar";
 
@@ -12,16 +12,11 @@ const Component: FC<ComponentProps> = () => {
 
   return (
     <div className="flex h-screen">
-      <SideBar
-        role="Issuer"
-        activeNav={activeNav}
-        setActiveNav={setActiveNav}
-      />
-      <NavBar role="Issuer" activeNav={activeNav} />
+      <SideBar role="User" activeNav={activeNav} setActiveNav={setActiveNav} />
+      <NavBar role="User" activeNav={activeNav} />
     </div>
   );
 };
 
 // Export component
 export default Component;
-
