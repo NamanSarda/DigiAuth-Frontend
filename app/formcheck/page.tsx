@@ -1,10 +1,10 @@
 "use client";
-import AcceptForm from "../../components/Forms/AcceptNewInvitation/form";
+import IssuanceForm from "../../components/Forms/IssuanceForm/form";
 
 export default function Home() {
   return (
     <>
-      <AcceptForm />
+      <IssuanceForm />
     </>
   );
 }
