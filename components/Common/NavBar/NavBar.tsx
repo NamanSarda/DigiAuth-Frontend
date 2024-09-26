@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import GenericNavBar from "./GenericNavbar";
+
 import ConnectionNavBar from "@/components/Common/Connection/Sections/SubNavBar/ConnectionNavbar";
 import IssuanceNav from "@/components/Roles/Issuer/Sections/Issuance/IssuanceNavBar";
 import SchemaNav from "@/components/Roles/Issuer/Sections/Schema/SchemaNavBar";
@@ -10,6 +11,7 @@ interface NavBarProps {
 }
 
 const ProofRequestNav = () => <div>ProofRequestNav</div>;
+
 const RevocationNav = () => <div>RevocationNav</div>;
 const RequestProof = () => <div>RequestProof</div>;
 
