@@ -1,23 +1,38 @@
-// "use client";
+"use client";
+import AcceptNewInvitationForm from "@/components/Forms/AcceptNewInvitation/form";
 import CreateInvitationForm from "@/components/Forms/CreateNewInvitation/form";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export default function NewConnection() {
-  const [] = useState();
+  const [form, setForm] = useState(""); // Initialize empty form state
+
+  // Conditional rendering based on form state
+  let render = <></>;
+  if (form === "Create") render = <CreateInvitationForm />;
+  if (form === "Accept") render = <AcceptNewInvitationForm />;
+
   return (
     <>
-      <div className="flex justify-evenly items-center w-full
-      ">
-        <CreateInvitationForm />
-        <Button className="bg-[#D9D9D9] text-black">
-          Accept New Invitation
-        </Button>
+      <div className="w-full flex flex-col items-center">
+        {/* Buttons in a row */}
+        <div className="flex justify-center space-x-4 w-full mb-4">
+          <Button
+            onClick={() => setForm("Create")}
+            className="bg-[#D9D9D9] text-black w-full "
+          >
+            Create New Invitation
+          </Button>
+          <Button
+            onClick={() => setForm("Accept")}
+            className="bg-[#D9D9D9] text-black w-full "
+          >
+            Accept New Invitation
+          </Button>
+        </div>
+        {/* Rendered form below buttons */}
+        <div className="items-center">{render}</div>
       </div>
-
-      {/* <Button className="bg-[#D9D9D9] text-black ">
-        Create New 
-      </Button> */}
     </>
   );
 }

@@ -7,21 +7,27 @@ interface Connection {
   DID: string;
   Name: string;
   ID: string;
-  i: number; // Assuming `i` is an index or unique identifier
+  i: number;
+  state: string; // Assuming `i` is an index or unique identifier
 }
 
 export default function ActiveSection() {
   // State to store connections and loading/error states
   const [connections, setConnections] = useState<Connection[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const role = localStorage.getItem("role");
+  let url = "http://20.70.181.223:";
+  if (role === "User") url += "1025";
+  else if (role === "Issuer") url += "2025";
+  else if (role === "Verifier") url += "3025";
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // // Fetch connections when the component mounts
   // useEffect(() => {
   //   const fetchConnections = async () => {
   //     try {
   //       // Replace with your API endpoint
-  //       const response = await fetch("/api/connections/active");
+  //       const response = await fetch(`url` + "/connections");
   //       if (!response.ok) {
   //         throw new Error("Network response was not ok");
   //       }
@@ -41,15 +47,17 @@ export default function ActiveSection() {
   // }, []);
 
   // // Render loading, error, or the list of connections
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
-
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  const activeConnections = connections.filter(
+    (connection) => connection.state === "active"
+  );
   return (
     <div>
       {connections.length === 0 ? (
         <div>No active connections</div>
       ) : (
-        connections.map((connection) => (
+        activeConnections.map((connection) => (
           <ConnectionCard
             key={connection.ID}
             DID={connection.DID}

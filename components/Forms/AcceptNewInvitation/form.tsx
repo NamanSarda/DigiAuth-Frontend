@@ -58,8 +58,8 @@ export default function AcceptNewInvitationForm() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-      <div className="flex items-center justify-between w-full max-w-4xl px-6">
+    // <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      // <div className="flex items-center justify-between w-full max-w-4xl px-6">
         <div className="w-full">
           <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
             <h1 className="text-white text-2xl mb-4 flex justify-center">
@@ -100,7 +100,7 @@ export default function AcceptNewInvitationForm() {
             </Form>
           </div>
         </div>
-      </div>
-    </div>
+      // </div>
+    // </div>
   );
 }

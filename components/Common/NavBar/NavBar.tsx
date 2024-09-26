@@ -11,7 +11,6 @@ interface NavBarProps {
 }
 
 const ProofRequestNav = () => <div>ProofRequestNav</div>;
-
 const RevocationNav = () => <div>RevocationNav</div>;
 const RequestProof = () => <div>RequestProof</div>;
 

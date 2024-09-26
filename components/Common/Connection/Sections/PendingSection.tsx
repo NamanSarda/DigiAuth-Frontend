@@ -6,20 +6,26 @@ interface Connection {
   DID: string;
   Name: string;
   ID: string;
-  i: number;  
+  i: number;
+  state: string;
 }
 
 export default function PendingSection() {
-
   const [connections, setConnections] = useState<Connection[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  // const role = localStorage.getItem("role");
+  // let url = "http://20.70.181.223:";
+  // if (role === "User") url += "1025";
+  // else if (role === "Issuer") url += "2025";
+  // else if (role === "Verifier") url += "3025";
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // // // Fetch connections when the component mounts
   // useEffect(() => {
   //   const fetchConnections = async () => {
   //     try {
   //       // Replace with your API endpoint
-  //       const response = await fetch("/api/connections/pending");
+  //       const response = await fetch(`url` + "/connections");
   //       if (!response.ok) {
   //         throw new Error("Network response was not ok");
   //       }
@@ -37,17 +43,18 @@ export default function PendingSection() {
 
   //   fetchConnections();
   // }, []);
-
-  // // Render loading, error, or the list of connections
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
-
+  // Render loading, error, or the list of connections
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  const pendingConnections = connections.filter(
+    (connection) => connection.state === "pending"
+  );
   return (
     <div>
       {connections.length === 0 ? (
         <div>No pending connections</div>
       ) : (
-        connections.map((connection) => (
+        pendingConnections.map((connection) => (
           <ConnectionCard
             key={connection.ID}
             DID={connection.DID}
