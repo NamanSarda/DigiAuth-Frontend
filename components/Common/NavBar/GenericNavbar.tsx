@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type NavItem = {
   key: string;
@@ -11,6 +12,12 @@ type NavBarProps = {
   navItems: NavItem[];
 };
 
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.href = "/";
+};
+
 const GenericNavBar: React.FC<NavBarProps> = ({ activeNav, navItems }) => {
   return (
     <div className="flex-1 bg-[#E5E5E5]">
@@ -18,7 +25,9 @@ const GenericNavBar: React.FC<NavBarProps> = ({ activeNav, navItems }) => {
         <div className="w-1/2 flex justify-center">
           <Input className="w-3/4" placeholder="Search" />
         </div>
-        <div className="flex items-center space-x-4">Logo</div>
+        <Button className="" onClick={handleLogout}>
+          Logout
+        </Button>
       </div>
       <div className="p-6">
         {navItems.map(
