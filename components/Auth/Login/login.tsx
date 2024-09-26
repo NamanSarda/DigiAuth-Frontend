@@ -61,12 +61,12 @@ export default function LoginForm() {
         router.push(`./${data.role.toLowerCase()}`);
         // form.reset();
       } else {
-        setErrorMessage("Failed to submit the form. Please try again."); // Set error message for failed submission
+        setErrorMessage("Failed to submit the form. Please try again."); 
         console.error("API request failed with status:", response.status);
       }
     } catch (error) {
       console.error("Error:", error);
-      setErrorMessage("An unexpected error occurred. Please try again."); // Set a generic error message for unexpected errors
+      setErrorMessage("An unexpected error occurred. Please try again."); 
     } finally {
       setIsLoading(false);
     }

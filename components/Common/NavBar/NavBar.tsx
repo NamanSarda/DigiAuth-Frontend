@@ -27,6 +27,7 @@
 import React, { useMemo } from "react";
 import GenericNavBar from "./GenericNavbar";
 import ConnectionNavBar from "@/components/Common/Connection/Sections/NavBar/ConnectionNavbar";
+// import IssuanceForm from "../../Forms/IssuanceForm";
 
 interface NavBarProps {
   role: string | null;
@@ -36,7 +37,7 @@ interface NavBarProps {
 const CredentialNav = () => <div>CredentialNav</div>;
 const ProofRequestNav = () => <div>ProofRequestNav</div>;
 const SchemaNav = () => <div>SchemaNav</div>;
-const IssuanceNav = () => <div>IssuanceNav</div>;
+const IssuanceNav = () => <div>IssuanceForm</div>;
 const RevocationNav = () => <div>RevocationNav</div>;
 const RequestProof = () => <div>RequestProof</div>;
 
