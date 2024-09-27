@@ -19,13 +19,13 @@ export default function NewConnection() {
         <div className="flex justify-center space-x-4 w-full mb-4">
           <Button
             onClick={() => setForm("Create")}
-            className="bg-[#D9D9D9] text-black w-full "
+            className="bg-[#D9D9D9] text-black w-full hover:bg-[#334a5f] hover:text-white"
           >
             Create New Invitation
           </Button>
           <Button
             onClick={() => setForm("Accept")}
-            className="bg-[#D9D9D9] text-black w-full "
+            className="bg-[#D9D9D9] text-black w-full hover:bg-[#334a5f]  hover:text-white"
           >
             Accept New Invitation
           </Button>

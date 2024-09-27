@@ -22,7 +22,7 @@ export default function CredentialCard({
   Attributes = [],
 }: TcertificateProp) {
   return (
-    <Card className=" p-4 shadow-lg border border-gray-200 rounded-xl">
+    <Card className=" p-4 shadow-lg border border-gray-200 rounded-xl max-w-fit">
       <CardContent className="flex flex-col space-y-2">
         <h1 className="text-md font-semibold ">
           {`Connection ID: `}
