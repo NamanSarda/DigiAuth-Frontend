@@ -46,7 +46,8 @@ export default function CreateInvitationForm() {
           readOnly
           placeholder="Invitation Link"
           value={invite}
-          className="w-full h-32 border rounded p-2"
+          className="w-full h-22
+          border rounded p-2"
         />
         <Button
           disabled={invite.length < 1}

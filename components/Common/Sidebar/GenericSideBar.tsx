@@ -50,7 +50,7 @@ const GenericSideBar: React.FC<SideBarProps> = ({
               className={`w-full ${
                 activeNav === item.key
                   ? "bg-[#04202c] text-white"
-                  : "bg-[#D9D9D9] text-black"
+                  : "bg-[#D9D9D9] text-black hover:bg-[#04202c] hover:text-white"
               }`}
               onClick={() => setActiveNav(item.key)}
             >
