@@ -14,49 +14,58 @@ interface Connection {
 export default function ActiveSection() {
   // State to store connections and loading/error states
   const [connections, setConnections] = useState<Connection[]>([]);
-  const role = localStorage.getItem("role");
-  let url = "http://20.70.181.223:";
-  if (role === "User") url += "1025";
-  else if (role === "Issuer") url += "2025";
-  else if (role === "Verifier") url += "3025";
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // // Fetch connections when the component mounts
-  // useEffect(() => {
-  //   const fetchConnections = async () => {
-  //     try {
-  //       // Replace with your API endpoint
-  //       const response = await fetch(`url` + "/connections");
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       const data = await response.json();
-  //       // Set the fetched data to state
-  //       setConnections(data);
-  //     } catch (error) {
-  //       // Set error message
-  //       setError("Failed to fetch connections");
-  //     } finally {
-  //       // Set loading to false
-  //       setLoading(false);
-  //     }
-  //   };
+  const role = localStorage.getItem("role");
+  const id = localStorage.getItem("userid");
 
-  //   fetchConnections();
-  // }, []);
+  const getUrl = () => {
+    const baseUrl = "http://20.70.181.223:";
+    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    return baseUrl + (ports[role] || "");
+  };
 
+  useEffect(() => {
+    const fetchConnections = async () => {
+      try {
+        const url = `${getUrl()}/connections`;
+        console.log(url);
+        console.log(id);
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setConnections(data);
+      } catch (error) {
+        // setError("Failed to fetch connections");
+        setError("No Active connections");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchConnections();
+  }, []);
   // // Render loading, error, or the list of connections
   // setLoading(false);
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>{error}</div>;
   const activeConnections = connections.filter(
     (connection) => connection.state === "active"
   );
   return (
     <div>
       {connections.length === 0 ? (
-        <div>No active connections</div>
+        <div>No Active connections</div>
       ) : (
         activeConnections.map((connection) => (
           <ConnectionCard

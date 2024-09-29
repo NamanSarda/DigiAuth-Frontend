@@ -12,12 +12,8 @@ const Component: FC<ComponentProps> = () => {
 
   return (
     <div className="flex h-screen">
-      <SideBar
-        role="Verifier"
-        activeNav={activeNav}
-        setActiveNav={setActiveNav}
-      />
-      <NavBar role="Verifier" activeNav={activeNav} />
+      <SideBar role="User" activeNav={activeNav} setActiveNav={setActiveNav} />
+      <NavBar role="User" activeNav={activeNav} />
     </div>
   );
 };

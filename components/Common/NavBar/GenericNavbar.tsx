@@ -15,6 +15,8 @@ type NavBarProps = {
 const handleLogout = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("role");
+  localStorage.removeItem("userid");
+  localStorage.removeItem("email");
   window.location.href = "/";
 };
 
