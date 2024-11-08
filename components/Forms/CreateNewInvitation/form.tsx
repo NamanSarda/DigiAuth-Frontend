@@ -1,62 +1,83 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CreateInvitationForm() {
-  const [invite, setInvite] = useState<string>(""); // Initialize as an empty string
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [invite, setInvite] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [copied, setCopied] = useState(false);
+  const role = localStorage.getItem("role");
+
+  const getUrl = () => {
+    const baseUrl = "http://20.70.181.223:";
+    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    return baseUrl + (ports[role] || "");
+  };
 
   useEffect(() => {
-    //   const fetchInvite = async () => {
-    //     setLoading(true); // Set loading to true before fetching
-    //     try {
-    //       const response = await fetch("http://20.70.181.223/connections"); // Adjust the URL as needed
-    //       if (!response.ok) {
-    //         throw new Error("Network response was not ok");
-    //       }
-    //       const data = await response.json();
-    //     // setInvite(JSON.stringify(data, null, 2));
-    //       setInvite(data);
-    //     } catch (error) {
-    //       setError("Failed to create invite");
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
+    const fetchInvite = async () => {
+      setLoading(true);
+      try {
+        const data = {
+          id: localStorage.getItem("userid"),
+          alias: localStorage.getItem("email"),
+        };
+        console.log(getUrl());
+        const response = await fetch(`${getUrl()}/send-invitation`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error("Network response was not ok");
+        const responseData = await response.json();
+        const invitation = JSON.stringify(responseData.invitation);
+        console.log(invitation);
+        setInvite(invitation);
+      } catch (error) {
+        
+        setError("Failed to create invite");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    //   fetchConnections();
-    console.log("invite");
+    fetchInvite();
   }, []);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(invite).then(() => {
-      alert("Copied to clipboard!"); // Alert user that the text has been copied
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     });
   };
 
+  if (loading) return <p className="text-center">Loading...</p>;
+
   return (
-    <>
-      {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
-        <h1 className="text-white text-2xl mb-4 flex justify-center">
-          Invitation
-        </h1>
-        <textarea
-          readOnly
-          placeholder="Invitation Link"
-          value={invite}
-          className="w-full h-22
-          border rounded p-2"
-        />
-        <Button
-          disabled={invite.length < 1}
-          onClick={handleCopy}
-          className="mt-4 bg-[#2E8A99]"
-        >
-          Copy
-        </Button>
-      </div>
-    </>
+    <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
+      <h1 className="text-white text-2xl mb-4 text-center">Invitation</h1>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      <textarea
+        readOnly
+        placeholder="Invitation Link"
+        value={invite}
+        className="w-full h-22 border rounded p-2 mb-4"
+      />
+      <Button
+        disabled={!invite}
+        onClick={handleCopy}
+        className={`w-full ${copied ? "bg-green-500" : "bg-[#2E8A99]"}`}
+      >
+        {copied ? "Copied!" : "Copy"}
+      </Button>
+    </div>
   );
 }
