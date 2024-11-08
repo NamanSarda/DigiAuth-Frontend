@@ -3,11 +3,10 @@ import ConnectionCard from "../connectionCard";
 
 // Define the shape of your connection data
 interface Connection {
-  DID: string;
-  Name: string;
+  Alias: string;
+  ConnectionID: string;
   ID: string;
-  i: number;
-  state: string;
+  MyRole: string; // optional
 }
 
 export default function PendingSection() {
@@ -15,7 +14,8 @@ export default function PendingSection() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const role = localStorage.getItem("role");
+  const role =
+    (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
   const id = localStorage.getItem("userid");
 
   const getUrl = () => {
@@ -41,7 +41,13 @@ export default function PendingSection() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setConnections(data);
+        if (
+          data === undefined ||
+          data.connections === undefined ||
+          data.connections.length === 0
+        ) {
+          setConnections([]);
+        } else setConnections(data.connections);
       } catch (error) {
         // setError("Failed to fetch connections");
         setError("No Pending connections");
@@ -54,9 +60,10 @@ export default function PendingSection() {
   }, []); // Render loading, error, or the list of connections
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
-  const pendingConnections = connections.filter(
-    (connection) => connection.state === "pending"
-  );
+  // const pendingConnections = connections.filter(
+  // (connection) => connection.state === "pending"
+  // );
+  const pendingConnections = connections;
   return (
     <div>
       {connections.length === 0 ? (
@@ -65,10 +72,9 @@ export default function PendingSection() {
         pendingConnections.map((connection) => (
           <ConnectionCard
             key={connection.ID}
-            DID={connection.DID}
-            Name={connection.Name}
+            ConnectionID={connection.ConnectionID}
+            Alias={connection.Alias}
             ID={connection.ID}
-            i={connection.i}
           />
         ))
       )}

@@ -1,215 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import {
-//   Form,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormControl,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-
-// const formSchema = z.object({
-//   connection: z.string().nonempty("Connection is required"),
-//   credentialDefinition: z
-//     .string()
-//     .nonempty("Credential Definition is required"),
-//   credentialAttributes: z
-//     .string()
-//     .nonempty("Credential Attributes are required"),
-// });
-
-// export default function IssueCredentialForm() {
-//   const [isLoading, setIsLoading] = useState<boolean>(false);
-//   const [errorMessage, setErrorMessage] = useState<string>("");
-//   const [connections, setConnections] = useState<
-//     { id: string; name: string }[]
-//   >([]);
-//   const [credentialDefinitions, setCredentialDefinitions] = useState<
-//     { id: string; name: string }[]
-//   >([]);
-
-//   useEffect(() => {
-//     const fetchConnections = async () => {
-//       try {
-//         const response = await fetch("");
-//         const data = await response.json();
-//         const activeConnections = data.filter(
-//           (item: any) => item.state === "active"
-//         );
-//         setConnections(
-//           activeConnections.map((item: any) => ({
-//             id: item.id,
-//             name: item.name,
-//           }))
-//         );
-//       } catch (error) {
-//         console.error("Error fetching connections:", error);
-//       }
-//     };
-
-//     const fetchCredentialDefinitions = async () => {
-//       try {
-//         const response = await fetch("");
-//         const data = await response.json();
-//         const activeCredentialDefinitions = data.filter(
-//           (item: any) => item.state === "active"
-//         );
-//         setCredentialDefinitions(
-//           activeCredentialDefinitions.map((item: any) => ({
-//             id: item.id,
-//             name: item.name,
-//           }))
-//         );
-//       } catch (error) {
-//         console.error("Error fetching credential definitions:", error);
-//       }
-//     };
-
-//     fetchConnections();
-//     fetchCredentialDefinitions();
-//   }, []);
-
-//   const form = useForm<z.infer<typeof formSchema>>({
-//     resolver: zodResolver(formSchema),
-//     defaultValues: {
-//       connection: "",
-//       credentialDefinition: "",
-//       credentialAttributes: "",
-//     },
-//   });
-
-//   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-//     setIsLoading(true);
-//     setErrorMessage("");
-//     try {
-//       console.log("Selected Connection:", data.connection);
-//       console.log("Selected Credential Definition:", data.credentialDefinition);
-//       console.log("Credential Attributes:", data.credentialAttributes);
-
-//       alert("Credential issued successfully");
-//     } catch (error) {
-//       console.error("Error:", error);
-//       setErrorMessage("An unexpected error occurred. Please try again.");
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-//       <div className="flex items-center justify-between w-full max-w-4xl px-6">
-//         <div className="w-full">
-//           <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
-//             <h1 className="text-white text-2xl mb-4 flex justify-center">
-//               ISSUE CREDENTIAL
-//             </h1>
-//             <Form {...form}>
-//               <form onSubmit={form.handleSubmit(handleSubmit)}>
-//                 <FormField
-//                   control={form.control}
-//                   name="connection"
-//                   render={({ field }) => (
-//                     <FormItem>
-//                       <FormLabel className="text-white mb-4">
-//                         Select Connection
-//                       </FormLabel>
-//                       <Select onValueChange={field.onChange}>
-//                         <FormControl>
-//                           <SelectTrigger>
-//                             <SelectValue placeholder="Select a connection" />
-//                           </SelectTrigger>
-//                         </FormControl>
-//                         <SelectContent>
-//                           {connections.map((conn) => (
-//                             <SelectItem key={conn.id} value={conn.id}>
-//                               {conn.name}
-//                             </SelectItem>
-//                           ))}
-//                         </SelectContent>
-//                       </Select>
-//                       <FormMessage />
-//                     </FormItem>
-//                   )}
-//                 />
-//                 <FormField
-//                   control={form.control}
-//                   name="credentialDefinition"
-//                   render={({ field }) => (
-//                     <FormItem>
-//                       <FormLabel className="text-white mb-4">
-//                         Select Credential Definition
-//                       </FormLabel>
-//                       <Select onValueChange={field.onChange}>
-//                         <FormControl>
-//                           <SelectTrigger>
-//                             <SelectValue placeholder="Select a credential definition" />
-//                           </SelectTrigger>
-//                         </FormControl>
-//                         <SelectContent>
-//                           {credentialDefinitions.map((credDef) => (
-//                             <SelectItem key={credDef.id} value={credDef.id}>
-//                               {credDef.name}
-//                             </SelectItem>
-//                           ))}
-//                         </SelectContent>
-//                       </Select>
-//                       <FormMessage />
-//                     </FormItem>
-//                   )}
-//                 />
-//                 <FormField
-//                   control={form.control}
-//                   name="credentialAttributes"
-//                   render={({ field }) => (
-//                     <FormItem>
-//                       <FormLabel className="text-white mb-4">
-//                         Credential Attributes
-//                       </FormLabel>
-//                       <FormControl>
-//                         <Input
-//                           {...field}
-//                           placeholder="Enter credential attributes"
-//                         />
-//                       </FormControl>
-//                       <FormMessage />
-//                     </FormItem>
-//                   )}
-//                 />
-//                 {errorMessage && (
-//                   <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-//                 )}
-//                 <Button
-//                   type="submit"
-//                   disabled={isLoading}
-//                   className="mt-6 bg-[#2E8A99] flex justify-center"
-//                 >
-//                   {isLoading ? "Issuing..." : "Issue Credential"}
-//                 </Button>
-//               </form>
-//             </Form>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -217,195 +8,172 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-const formSchema = z.object({
-  connection: z.string().nonempty("Connection is required"),
-  credentialDefinitionId: z
-    .string()
-    .nonempty("Credential Definition ID is required"),
-  credentialAttributes: z
-    .string()
-    .nonempty("Credential Attributes are required"),
-});
-
-export default function IssueCredentialForm() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [connections, setConnections] = useState([]);
-  const [credentialDefinitions, setCredentialDefinitions] = useState([]);
-
-  useEffect(() => {
-    const fetchActiveConnections = async () => {
-      try {
-        // const response = await fetch("your-api-endpoint-for-connections");
-        // const data = await response.json();
-        // const activeConnections = data.filter(
-        //   (item: any) => item.state === "active"
-        // );
-        // setConnections(
-        //   activeConnections.map((item: any) => ({
-        //     id: item.id,
-        //     name: item.name,
-        //   }))
-        // );
-      } catch (error) {
-        console.error("Failed to fetch active connections:", error);
-      }
-    };
-
-    const fetchActiveCredentialDefinitions = async () => {
-      try {
-        // const response = await fetch(
-        //   "your-api-endpoint-for-credential-definitions"
-        // );
-        // const data = await response.json();
-        // const activeCredentialDefinitions = data.filter(
-        //   (item: any) => item.state === "active"
-        // );
-        // setCredentialDefinitions(
-        //   activeCredentialDefinitions.map((item: any) => ({
-        //     id: item.id,
-        //     name: item.name,
-        //   }))
-        // );
-      } catch (error) {
-        console.error("Failed to fetch active credential definitions:", error);
-      }
-    };
-
-    fetchActiveConnections();
-    fetchActiveCredentialDefinitions();
-  }, []);
-
-  const fetchActiveData = async (dataType: string) => {
-    if (dataType === "connections") {
-      return [{ id: "mas123", name: "abc (mas123)" }];
-    } else if (dataType === "credentialDefinitions") {
-      return [{ id: "def456", name: "Credential Definition 1" }];
-    }
-    return [];
-  };
-
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form Data:", data);
-  };
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      connection: "",
-      credentialDefinitionId: "",
-      credentialAttributes: "",
+export default function RegisterCredentialForm() {
+  const [connections, setConnections] = useState([
+    { id: "dummy1", name: "Dummy Connection 1" },
+    { id: "dummy2", name: "Dummy Connection 2" },
+  ]);
+  const [schemas, setSchemas] = useState([
+    {
+      id: "schema1",
+      name: "Dummy Schema 1",
+      credential_definition_id: "cred-def-1",
+      attributes: ["name", "email", "dob", "age", "gender"],
     },
-  });
+    {
+      id: "schema2",
+      name: "Dummy Schema 2",
+      credential_definition_id: "cred-def-2",
+      attributes: ["company", "position", "experience"],
+    },
+  ]);
+
+  const [selectedConnection, setSelectedConnection] = useState("");
+  const [selectedSchema, setSelectedSchema] = useState("");
+  const [credentialDefinitionId, setCredentialDefinitionId] = useState("");
+  const [attributes, setAttributes] = useState([]);
+  const [attributeValues, setAttributeValues] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const role = localStorage.getItem("role");
+
+  const getUrl = () => {
+    const baseUrl = "http://20.70.181.223:";
+    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    return baseUrl + (ports[role] || "");
+  };
+
+  // Simulate fetching schema details based on selected schema
+  useEffect(() => {
+    if (!selectedSchema) return;
+
+    // Simulate an API call to get schema details
+    const selectedSchemaData = schemas.find(
+      (schema) => schema.id === selectedSchema
+    );
+    setCredentialDefinitionId(selectedSchemaData?.credential_definition_id);
+    setAttributes(selectedSchemaData?.attributes || []);
+  }, [selectedSchema]);
+
+  const handleAttributeChange = (attribute, value) => {
+    setAttributeValues({ ...attributeValues, [attribute]: value });
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+    try {
+      const data = {
+        connection_id: selectedConnection,
+        schema_id: selectedSchema,
+        credential_definition_id: credentialDefinitionId,
+        attributes: attributeValues,
+      };
+
+      // Simulate the submission (can replace with an actual API call)
+      console.log("Submitted Data:", data);
+
+      setSuccess(true);
+      setSelectedConnection("");
+      setSelectedSchema("");
+      setCredentialDefinitionId("");
+      setAttributes([]);
+      setAttributeValues({});
+    } catch (error) {
+      setError("Failed to register credential");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-      <div className="flex items-center justify-between w-full max-w-4xl px-6">
-        <div className="w-full">
-          <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
-            <h1 className="text-white text-2xl mb-4 flex justify-center">
-              ISSUE CREDENTIAL
-            </h1>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleSubmit)}>
-                <FormField
-                  control={form.control}
-                  name="connection"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white mb-4">
-                        Select Connection
-                      </FormLabel>
-                      <Select onValueChange={field.onChange}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a connection" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {connections.map((conn) => (
-                            <SelectItem key={conn.id} value={conn.id}>
-                              {conn.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+    <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
+      <h1 className="text-white text-2xl mb-4 text-center">Issue Credential</h1>
 
-                <FormField
-                  control={form.control}
-                  name="credentialDefinitionId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white mb-4">
-                        Select Credential Definition ID
-                      </FormLabel>
-                      <Select onValueChange={field.onChange}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a credential definition" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {credentialDefinitions.map((cred) => (
-                            <SelectItem key={cred.id} value={cred.id}>
-                              {cred.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-                <FormField
-                  control={form.control}
-                  name="credentialAttributes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-white mb-4">
-                        Credential Attributes
-                      </FormLabel>
-                      <Textarea
-                        placeholder="Enter credential attributes"
-                        {...field}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {success && (
+        <Alert variant="success" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Success</AlertTitle>
+          <AlertDescription>
+            Credential registered successfully!
+          </AlertDescription>
+        </Alert>
+      )}
 
-                {errorMessage && (
-                  <div className="my-[2vh] text-[#FF0000]">{errorMessage}</div>
-                )}
+      {/* Connection Dropdown */}
+      <Select onValueChange={setSelectedConnection}>
+        <SelectTrigger className="w-full mb-4">
+          <SelectValue placeholder="Select Connection" />
+        </SelectTrigger>
+        <SelectContent>
+          {connections.map((connection) => (
+            <SelectItem key={connection.id} value={connection.id}>
+              {connection.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="mt-6 bg-[#2E8A99] flex justify-center"
-                >
-                  {isLoading ? "Issuing..." : "Issue Credential"}
-                </Button>
-              </form>
-            </Form>
-          </div>
-        </div>
+      {/* Schema Dropdown */}
+      <Select onValueChange={setSelectedSchema}>
+        <SelectTrigger className="w-full mb-4">
+          <SelectValue placeholder="Select Schema" />
+        </SelectTrigger>
+        <SelectContent>
+          {schemas.map((schema) => (
+            <SelectItem key={schema.id} value={schema.id}>
+              {schema.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Credential Definition ID (Auto-filled) */}
+      {credentialDefinitionId && (
+        <Input
+          type="text"
+          value={credentialDefinitionId}
+          readOnly
+          placeholder="Credential Definition ID"
+          className="w-full mb-4"
+        />
+      )}
+
+      {/* Attribute Fields */}
+      <div className="mb-4">
+        {attributes.map((attribute, index) => (
+          <Input
+            key={index}
+            type="text"
+            placeholder={`Enter ${attribute}`}
+            value={attributeValues[attribute] || ""}
+            onChange={(e) => handleAttributeChange(attribute, e.target.value)}
+            className="w-full mb-2"
+          />
+        ))}
       </div>
+
+      <Button
+        onClick={handleSubmit}
+        className="w-full bg-[#2E8A99]"
+        disabled={loading}
+      >
+        {loading ? "Submitting..." : "Submit"}
+      </Button>
     </div>
   );
 }

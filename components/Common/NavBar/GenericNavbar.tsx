@@ -22,16 +22,16 @@ const handleLogout = () => {
 
 const GenericNavBar: React.FC<NavBarProps> = ({ activeNav, navItems }) => {
   return (
-    <div className="flex-1 bg-[#E5E5E5]">
+    <div className="flex-1 bg-[#E5E5E5] overflow-y-auto">
       <div className="flex items-center justify-between bg-white p-4 shadow-md">
         <div className="w-1/2 flex justify-center">
           <Input className="w-3/4" placeholder="Search" />
         </div>
-        <Button className="" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Button onClick={handleLogout}>Logout</Button>
       </div>
-      <div className="p-6">
+
+      {/* Scrollable content section */}
+      <div className="flex-1 p-6">
         {navItems.map(
           (item) =>
             activeNav === item.key && (
