@@ -1,29 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type TconnectionProp = {
-  i: number;
-  DID: string;
-  Name: string;
+  Alias: string;
+  ConnectionID: string;
   ID: string;
 };
 
 export default function ConnectionCard({
-  i,
-  DID = "",
-  Name,
+  Alias,
+  ConnectionID,
   ID,
 }: TconnectionProp) {
-  const status = DID === "" ? "Pending" : "Active";
   return (
     <>
       <Card className="bg-white p-4 shadow-sm">
-        <CardHeader className="mb-2">
-          <CardTitle>{`${status} Connection ${i}`}</CardTitle>
-        </CardHeader>
         <CardContent>
-          <h1>{`Connection Name :${Name}`}</h1>
-          <h2>{`Connection ID :${ID}`}</h2>
-          <p>{`DID:${DID}`}</p>
+          <h1>{`Connection Name :${Alias}`}</h1>
+          <h2>{`ID :${ID}`}</h2>
+          <p>{`Connection ID:${ConnectionID}`}</p>
         </CardContent>
       </Card>
     </>
