@@ -24,8 +24,8 @@ export default function ActiveSection() {
   const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
 
   const getUrl = () => {
-    // const baseUrl = "http://20.70.181.223:";
-    const baseUrl = "http://20.189.76.136:";
+    const baseUrl = "http://localhost:";
+    // const baseUrl = "http://20.189.76.136:";
     const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
