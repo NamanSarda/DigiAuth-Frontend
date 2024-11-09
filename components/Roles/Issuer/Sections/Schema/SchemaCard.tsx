@@ -1,27 +1,26 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 type TcertificateProp = {
-  DID: string;
-  Name: string;
-  ID: string;
-  i: number;
+  schemaID: string;
+  schemaName: string;
+  cred_def_id: string;
+  attributes: string[];
 };
 
 export default function SchemaCard({
-  DID = "",
-  Name,
-  ID,
-  i,
+  schemaID,
+  schemaName,
+  cred_def_id,
+  attributes,
 }: TcertificateProp) {
   return (
-    <>
-      <Card className="bg-white p-4 shadow-sm">
-        <CardContent>
-          <h1>{`Connection Name :${Name}`}</h1>
-          <h2>{`Connection ID :${ID}`}</h2>
-          <p>{`DID:${DID}`}</p>
-        </CardContent>
-      </Card>
-    </>
+    <Card className="bg-white p-4 shadow-sm">
+      <CardContent>
+        <h1>{`Schema Name: ${schemaName}`}</h1>
+        <h2>{`Schema ID: ${schemaID}`}</h2>
+        <p>{`Credential Definition ID: ${cred_def_id}`}</p>
+        <p>{`Attributes: ${attributes.join(", ")}`}</p>
+      </CardContent>
+    </Card>
   );
 }
