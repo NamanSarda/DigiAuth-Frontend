@@ -13,7 +13,7 @@ export default function ConnectionCard({
 }: TconnectionProp) {
   return (
     <>
-      <Card className="bg-white p-4 shadow-sm">
+      <Card className="my-4 bg-white p-4 shadow-sm">
         <CardContent>
           <h1>{`Connection Name :${Alias}`}</h1>
           <h2>{`ID :${ID}`}</h2>

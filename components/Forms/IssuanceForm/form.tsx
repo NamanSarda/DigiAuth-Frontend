@@ -9,12 +9,12 @@
     SelectValue,
   } from "@/components/ui/select";
   import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-  import { AlertCircle } from "lucide-react";
+  import { AlertCircle, Copy } from "lucide-react"; // Import the Copy icon
+  import { Label } from "@/components/ui/label";
 
   export default function RegisterCredentialForm() {
     const [connections, setConnections] = useState([]);
     const [schemas, setSchemas] = useState([]);
-
     const [selectedConnection, setSelectedConnection] = useState("");
     const [selectedSchema, setSelectedSchema] = useState("");
     const [credentialDefinitionId, setCredentialDefinitionId] = useState("");
@@ -23,15 +23,13 @@
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-    const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
+    const [copySuccess, setCopySuccess] = useState(false); // State for copy feedback
 
-    const role =
-      (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
+    const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
+    const role = (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
     const getUrl = () => {
       const baseUrl = "http://localhost:";
-      // const baseUrl = "http://20.189.76.136:";
-
       const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
       return baseUrl + (ports[role] || "");
     };
@@ -53,18 +51,8 @@
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        if (
-          data === null ||
-          data === undefined ||
-          data.connections === undefined ||
-          data.connections.length === 0
-        ) {
-          setConnections([]);
-        } else {
-          setConnections(data.connections); // Update state with fetched connections
-        }
+        setConnections(data.connections || []);
         console.log(data.connections);
-        console.log(data);
       };
       fetchConnections();
     }, []);
@@ -74,13 +62,11 @@
         try {
           const response = await fetch(`${getUrl()}/created-schemas`);
           const data = await response.json();
-          console.log(data.schema_ids);
-          setSchemas(data.schema_ids); // Set the schemas directly here to update state
+          setSchemas(data.schema_ids || []);
         } catch (error) {
           console.error("Failed to fetch schemas:", error);
         }
       };
-
       fetchSchemas();
     }, []);
 
@@ -89,49 +75,55 @@
 
       const fetchSelectedSchemaDetails = async () => {
         try {
-          // const response = await fetch(`${getUrl()}/schemas/${selectedSchema}`);
-          const data = { id: selectedSchema }
-          console.log(data);
-          const response = await fetch(`${getUrl()}/schemasGet`,{
+          const response = await fetch(`${getUrl()}/schemasGet`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify({ id: selectedSchema }),
           });
           const schemaDetails = await response.json();
-          console.log(schemaDetails.schema)
-          // Extracting the value before the first ':' in the id
-          // const issuerDid = schemaDetails.id.split(":")[0];
-          setCredentialDefinitionId(schemaDetails.credential_definition_id);
-          setAttributes(schemaDetails.attributes || []);
+          setCredentialDefinitionId(schemaDetails.schema.CredentialDefinitionID);
+          setAttributes(schemaDetails.schema.Attributes || []);
         } catch (error) {
           console.error("Failed to fetch selected schema details:", error);
         }
       };
-
       fetchSelectedSchemaDetails();
     }, [selectedSchema]);
 
     const handleAttributeChange = (attribute, value) => {
       setAttributeValues({ ...attributeValues, [attribute]: value });
     };
-
     const handleSubmit = async () => {
       setLoading(true);
       setError(null);
       setSuccess(false);
       try {
-        const data = {
+        const payload = {
           connection_id: selectedConnection,
           schema_id: selectedSchema,
+          schema_name: schemas.find((schema) => schema === selectedSchema), // Assuming schema name is the schema ID for simplicity
           credential_definition_id: credentialDefinitionId,
-          attributes: attributeValues,
+          attributes: attributes.map((attribute) => ({
+            name: attribute,
+            value: attributeValues[attribute] || "",
+            type: "mime-type", // Replace with actual type if available
+          })),
         };
-
-        // Simulate the submission (can replace with an actual API call)
-        console.log("Submitted Data:", data);
-
+        
+        const response = await fetch(`${getUrl()}/issue-credential`, { // Replace with your URL
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+    
+        if (!response.ok) {
+          throw new Error("Failed to register credential");
+        }
+    
         setSuccess(true);
         setSelectedConnection("");
         setSelectedSchema("");
@@ -143,6 +135,13 @@
       } finally {
         setLoading(false);
       }
+    };
+    
+
+    const handleCopy = () => {
+      navigator.clipboard.writeText(credentialDefinitionId);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
     };
 
     return (
@@ -169,28 +168,27 @@
 
         {/* Connection Dropdown */}
         {connections.length === 0 ? (
-  <Alert variant="destructive" className="mb-4">
-    <AlertCircle className="h-4 w-4" />
-    <AlertTitle>No Connections Found</AlertTitle>
-    <AlertDescription>
-      You do not have any available connections at the moment.
-    </AlertDescription>
-  </Alert>
-) : (
-  <Select onValueChange={setSelectedConnection}>
-    <SelectTrigger className="w-full mb-4">
-      <SelectValue placeholder="Select Connection" />
-    </SelectTrigger>
-    <SelectContent>
-      {connections.map((connection) => (
-        <SelectItem key={connection.ConnectionID} value={connection.ConnectionID}>
-          {connection.Alias} {/* Display alias or connection identifier */}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-)}
-
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>No Connections Found</AlertTitle>
+            <AlertDescription>
+              You do not have any available connections at the moment.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Select onValueChange={setSelectedConnection}>
+            <SelectTrigger className="w-full mb-4">
+              <SelectValue placeholder="Select Connection" />
+            </SelectTrigger>
+            <SelectContent>
+              {connections.map((connection) => (
+                <SelectItem key={connection.ConnectionID} value={connection.ConnectionID}>
+                  {connection.Alias}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
 
         {/* Schema Dropdown */}
         {schemas.length === 0 ? (
@@ -216,30 +214,43 @@
           </Select>
         )}
 
-        {/* Credential Definition ID (Auto-filled) */}
+        {/* Credential Definition ID with Copy Button */}
         {credentialDefinitionId && (
-          <Input
-            type="text"
-            value={credentialDefinitionId}
-            readOnly
-            placeholder="Credential Definition ID"
-            className="w-full mb-4"
-          />
+          <>
+            <Label className="text-white">Credential Definition</Label>
+            <div className="flex items-center gap-2 mb-4">
+              <Input
+                type="text"
+                value={credentialDefinitionId}
+                readOnly
+                placeholder="Credential Definition ID"
+                className="w-full"
+              />
+              <Button onClick={handleCopy} variant="outline" className="px-2 py-1">
+                {copySuccess ? "Copied!" : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          </>
         )}
 
         {/* Attribute Fields */}
         <div className="mb-4">
-          {attributes.map((attribute, index) => (
-            <Input
-              key={index}
-              type="text"
-              placeholder={`Enter ${attribute}`}
-              value={attributeValues[attribute] || ""}
-              onChange={(e) => handleAttributeChange(attribute, e.target.value)}
-              className="w-full mb-2"
-            />
-          ))}
-        </div>
+    {attributes.length !== 0 && <Label className="text-white text-lg">Attributes</Label>}
+    {attributes.map((attribute, index) => (
+      <div key={attribute + index}> {/* Unique key for each attribute block */}
+        <Label className="text-white">{attribute}</Label>
+        <Input
+          key={`${attribute}-${index}`} // Unique key for each Input component
+          type="text"
+          placeholder={`Enter ${attribute}`}
+          value={attributeValues[attribute] || ""}
+          onChange={(e) => handleAttributeChange(attribute, e.target.value)}
+          className="w-full mb-2"
+        />
+      </div>
+    ))}
+  </div>
+
 
         <Button
           onClick={handleSubmit}

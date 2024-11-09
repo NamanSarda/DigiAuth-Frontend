@@ -5,9 +5,9 @@ import SchemaCard from "./SchemaCard";
 // Define the shape of your Certificates data
 interface Schema {
   schemaID: string;
-  schemaName: string;
-  cred_def_id: string;
-  attributes: string[];
+  // schemaName: string;
+  // cred_def_id: string;
+  // attributes: string[];
 }
 
 export default function Schemas() {
@@ -30,29 +30,20 @@ export default function Schemas() {
     const fetchSchema = async () => {
       try {
         const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
-
-        const response = await fetch(`${getUrl()}/schemasGet`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-          });
-
+        const response = await fetch(`${getUrl()}/created-schemas`);
+        
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const responseData = await response.json();
         // Set the fetched data to state
-        console.log(responseData)
         if (
           responseData === undefined ||
-          responseData.schemas === undefined ||
-          responseData.schemas.length === 0
+          responseData.schema_ids === undefined ||
+          responseData.schema_ids.length === 0
         ) {
-          setSchema(responseData);
         }
+        setSchema(responseData.schema_ids);
       }
       catch (error) {
         // Set error message
@@ -77,11 +68,11 @@ export default function Schemas() {
       ) : (
         schemas.map((schema) => (
           <SchemaCard
-            key={schema.schemaID}
-            schemaName={schema.schemaName}
-            schemaID={schema.schemaID}
-            cred_def_id={schema.cred_def_id}
-            attributes={schema.attributes}
+            key={schema}
+            // schemaName={schema.schemaName}
+            schemaID={schema}
+            // cred_def_id={schema.cred_def_id}
+            // attributes={schema.attributes}
           />
         ))
       )}

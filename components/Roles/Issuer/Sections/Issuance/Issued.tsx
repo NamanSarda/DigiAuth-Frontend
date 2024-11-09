@@ -4,45 +4,49 @@ import IssuedCard from "./issuedCard";
 
 // Define the shape of your Certificates data
 interface Certificate {
-  DID: string;
-  Name: string;
-  ID: string;
-  i: number;
+  attrs: { [key: string]: string };  // Assuming Attr is a key-value pair object
+  cred_def_id: string;
 }
 
 export default function Issued() {
   // State to store Certificatess and loading/error states
   const [certificates, setCertificates] = useState<Certificate[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const getUrl = () => {
+    // const baseUrl = "http://20.189.76.136:";
+    const baseUrl = "http://localhost:6041";
+    return baseUrl;
+  };
 
   // // Fetch Certificates when the component mounts
-  // useEffect(() => {
-  //   const fetchCertificates = async () => {
-  //     try {
+  useEffect(() => {
+    const fetchCertificates = async () => {
+      try {
   //       // Replace with your API endpoint
-  //       const response = await fetch("/api/certificates/active");
-  //       if (!response.ok) {
-  //         throw new Error("Network response was not ok");
-  //       }
-  //       const data = await response.json();
-  //       // Set the fetched data to state
-  //       setCertificates(data);
-  //     } catch (error) {
-  //       // Set error message
-  //       setError("Failed to fetch certificates");
-  //     } finally {
+        const response = await fetch(`${getUrl()}/credentials`)
+            if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        // Set the fetched data to state
+        console.log(data.results)
+        setCertificates(data.results);
+      } catch (error) {
+        // Set error message
+        setError("Failed to fetch certificates");
+      } finally {
   //       // Set loading to false
-  //       setLoading(false);
-  //     }
-  //   };
+        setLoading(false);
+      }
+    };
 
-  //   fetchCertificates();
-  // }, []);
+    fetchCertificates();
+  }, []);
 
   // // Render loading, error, or the list of certificates
-  // if (loading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>
@@ -51,11 +55,9 @@ export default function Issued() {
       ) : (
         certificates.map((certificate) => (
           <IssuedCard
-            key={certificate.ID}
-            DID={certificate.DID}
-            Name={certificate.Name}
-            ID={certificate.ID}
-            i={certificate.i}
+            key={certificate.cred_def_id}
+            cred_def_id={certificate.cred_def_id}
+            Attr={certificate.attrs}
           />
         ))
       )}
