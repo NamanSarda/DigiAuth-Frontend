@@ -8,11 +8,13 @@ export default function CreateInvitationForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
-  const role = localStorage.getItem("role");
+  const role =
+    (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
-    const baseUrl = "http://20.70.181.223:";
-    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    // const baseUrl = "http://20.70.181.223:";
+    const baseUrl = "http://localhost:";
+    const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
 
@@ -21,7 +23,7 @@ export default function CreateInvitationForm() {
       setLoading(true);
       try {
         const data = {
-          id: localStorage.getItem("userid"),
+          id: parseInt(localStorage.getItem("userid") ?? "0", 10),
           alias: localStorage.getItem("email"),
         };
         console.log(getUrl());
@@ -36,7 +38,7 @@ export default function CreateInvitationForm() {
         console.log(invitation);
         setInvite(invitation);
       } catch (error) {
-        
+        console.log(error);
         setError("Failed to create invite");
       } finally {
         setLoading(false);

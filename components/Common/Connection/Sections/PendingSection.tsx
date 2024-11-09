@@ -19,8 +19,9 @@ export default function PendingSection() {
   const id = localStorage.getItem("userid");
 
   const getUrl = () => {
-    const baseUrl = "http://20.70.181.223:";
-    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    // const baseUrl = "http://20.70.181.223:";
+    const baseUrl = "http://localhost:";
+    const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
 

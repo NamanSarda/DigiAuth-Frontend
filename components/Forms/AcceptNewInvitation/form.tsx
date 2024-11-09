@@ -9,12 +9,14 @@ export default function AcceptNewInvitationForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
-  const role = localStorage.getItem("role");
-  const id = localStorage.getItem("id");
+  // const id = localStorage.getItem("id");
+  const role =
+    (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
-    const baseUrl = "http://20.70.181.223:";
-    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    // const baseUrl = "http://20.70.181.223:";
+    const baseUrl = "http://localhost:";
+    const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
   const form = useForm({
@@ -36,7 +38,7 @@ export default function AcceptNewInvitationForm() {
   }, [isSuccessful, form]);
 
   const handleSubmit = async (data: any) => {
-    const id = localStorage.getItem("userid");
+    const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
     console.log(id);
     data = { ...data, id };
     console.log(data);

@@ -12,11 +12,12 @@ export default function RegisterCertificateForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const role = localStorage.getItem("role");
+  const role =
+    (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
-    const baseUrl = "http://20.70.181.223:";
-    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    const baseUrl = "http://localhost:";
+    const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
 
@@ -40,14 +41,14 @@ export default function RegisterCertificateForm() {
         schema_name: schemaName,
         schema_version: schemaVersion,
       };
-      //   const response = await fetch(`${getUrl()}/register-certificate`, {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(data),
-      //   });
-
-      //   if (!response.ok) throw new Error("Network response was not ok");
-      console.log(data);
+        const response = await fetch(`${getUrl()}/register-certificate`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+        
+        if (!response.ok) throw new Error("Network response was not ok");
+      // console.log(data);
 
       setSuccess(true);
 

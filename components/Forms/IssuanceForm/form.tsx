@@ -13,52 +13,113 @@ import { AlertCircle } from "lucide-react";
 
 export default function RegisterCredentialForm() {
   const [connections, setConnections] = useState([
-    { id: "dummy1", name: "Dummy Connection 1" },
-    { id: "dummy2", name: "Dummy Connection 2" },
+    // { id: "dummy1", name: "Dummy Connection 1" },
+    // { id: "dummy2", name: "Dummy Connection 2" },
   ]);
   const [schemas, setSchemas] = useState([
-    {
-      id: "schema1",
-      name: "Dummy Schema 1",
-      credential_definition_id: "cred-def-1",
-      attributes: ["name", "email", "dob", "age", "gender"],
-    },
-    {
-      id: "schema2",
-      name: "Dummy Schema 2",
-      credential_definition_id: "cred-def-2",
-      attributes: ["company", "position", "experience"],
-    },
+    // {
+    //   id: "schema1",
+    //   name: "Dummy Schema 1",
+    //   credential_definition_id: "cred-def-1",
+    //   attributes: ["name", "email", "dob", "age", "gender"],
+    // },
+    // {
+    //   id: "schema2",
+    //   name: "Dummy Schema 2",
+    //   credential_definition_id: "cred-def-2",
+    //   attributes: ["company", "position", "experience"],
+    // },
   ]);
 
   const [selectedConnection, setSelectedConnection] = useState("");
   const [selectedSchema, setSelectedSchema] = useState("");
   const [credentialDefinitionId, setCredentialDefinitionId] = useState("");
+  // const [issuerDid, setIssuerDid] = useState("")
   const [attributes, setAttributes] = useState([]);
   const [attributeValues, setAttributeValues] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
 
-  const role = localStorage.getItem("role");
+  const role =
+    (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
-    const baseUrl = "http://20.70.181.223:";
-    const ports = { User: "1025", Issuer: "2025", Verifier: "3025" };
+    const baseUrl = "http://localhost:";
+    const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
 
-  // Simulate fetching schema details based on selected schema
+  useEffect(() => {
+    const fetchConnections = async () => {
+      const url = `${getUrl()}/connections`;
+        console.log(url);
+        console.log(id);
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        if (
+          data === undefined ||
+          data.connections === undefined ||
+          data.connections.length === 0
+        ) {
+          setConnections([]);
+      } else setConnections(data.connections);
+      console.log(data.connections);
+    };
+    fetchConnections();
+  }, []);
+
+  // Fetch schemas and their corresponding details (credential_definition_id and attributes)
+  useEffect(() => {
+    const fetchSchemas = async () => {
+      try {
+        const response = await fetch(`${getUrl()}/creadted-schemas`);
+        const data = await response.json();
+        console.log(data.schema_ids);
+        setSchemas(data.schema_ids); // Set the schemas directly here
+      } catch (error) {
+        console.error("Failed to fetch schemas:", error);
+      }
+    };
+  
+    fetchSchemas();
+  }, []);
+  
   useEffect(() => {
     if (!selectedSchema) return;
+  
+    const fetchSelectedSchemaDetails = async () => {
+      try {
+        const response = await fetch(`${getUrl()}/schemas/${selectedSchema}`);
+        const schemaDetails = await response.json();
 
-    // Simulate an API call to get schema details
-    const selectedSchemaData = schemas.find(
-      (schema) => schema.id === selectedSchema
-    );
-    setCredentialDefinitionId(selectedSchemaData?.credential_definition_id);
-    setAttributes(selectedSchemaData?.attributes || []);
-  }, [selectedSchema]);
+        // Extracting the value before the first ':' in the id
+      const issuerDid = schemaDetails.id.split(':')[0];
+
+      // Store issuer_did and schema_issuer_did
+      // setIssuerDid(issuerDid);  
+      // setSchemaIssuerDid(issuerDid); 
+        
+        setCredentialDefinitionId(schemaDetails.credential_definition_id);
+        setAttributes(schemaDetails.attributes || []);
+      } catch (error) {
+        console.error("Failed to fetch selected schema details:", error);
+      }
+    };
+  
+    fetchSelectedSchemaDetails();
+  }, [selectedSchema]);  
 
   const handleAttributeChange = (attribute, value) => {
     setAttributeValues({ ...attributeValues, [attribute]: value });
@@ -74,6 +135,8 @@ export default function RegisterCredentialForm() {
         schema_id: selectedSchema,
         credential_definition_id: credentialDefinitionId,
         attributes: attributeValues,
+        //added
+
       };
 
       // Simulate the submission (can replace with an actual API call)
@@ -122,7 +185,7 @@ export default function RegisterCredentialForm() {
         <SelectContent>
           {connections.map((connection) => (
             <SelectItem key={connection.id} value={connection.id}>
-              {connection.name}
+              {connection.alias}
             </SelectItem>
           ))}
         </SelectContent>
@@ -136,7 +199,7 @@ export default function RegisterCredentialForm() {
         <SelectContent>
           {schemas.map((schema) => (
             <SelectItem key={schema.id} value={schema.id}>
-              {schema.name}
+              {schema?.name}
             </SelectItem>
           ))}
         </SelectContent>
