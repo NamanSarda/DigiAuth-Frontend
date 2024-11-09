@@ -8,7 +8,7 @@ interface Connection {
   Alias: string;
   ConnectionID: string;
   ID: string;
-  MyRole : string; // optional
+  MyRole: string; // optional
 }
 
 export default function ActiveSection() {
@@ -33,6 +33,7 @@ export default function ActiveSection() {
   useEffect(() => {
     const fetchConnections = async () => {
       try {
+        setLoading(true);
         const url = `${getUrl()}/connections`;
         console.log(url);
         console.log(id);
