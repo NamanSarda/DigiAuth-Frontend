@@ -14,8 +14,8 @@ export default function AcceptNewInvitationForm() {
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
-    // const baseUrl = "http://20.70.181.223:";
-    const baseUrl = "http://localhost:";
+    // const baseUrl = "http://localhost:";
+    const baseUrl = "http://20.189.76.136:";
     const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
   };
@@ -39,38 +39,50 @@ export default function AcceptNewInvitationForm() {
 
   const handleSubmit = async (data: any) => {
     const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
-    console.log(id);
-    data = { ...data, id };
-    console.log(data);
+    console.log("User ID:", id);
+
+    // Parse the invite JSON string and merge its contents directly
+    let inviteData = {};
+    try {
+        inviteData = JSON.parse(data.invite);
+    } catch (error) {
+        console.error("Failed to parse invite JSON:", error);
+    }
+
+    // Merge id and inviteData into data, then delete the invite field
+    data = { ...data, id, ...inviteData };
+    delete data.invite; // Remove 'invite' from data
+    console.log("Request data:", data);
+
     setIsLoading(true);
     setErrorMessage("");
-    // try {
-    // Simulating API call
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
+
     try {
-      const response = await fetch(`${getUrl()}/receive-invitation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...data }),
-      });
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("API response:", responseData);
-        setIsSuccessful(true);
-        setSuccessMessage("Invitation accepted successfully!");
-      } else {
-        setErrorMessage("Failed to submit the form. Please try again.");
-        console.error("API request failed with status:", response.status);
-      }
+        const response = await fetch(`${getUrl()}/receive-invitation`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            const responseData = await response.json();
+            console.log("API response:", responseData);
+            setIsSuccessful(true);
+            setSuccessMessage("Invitation accepted successfully!");
+        } else {
+            setErrorMessage("Failed to submit the form. Please try again.");
+            console.error("API request failed with status:", response.status);
+        }
     } catch (error) {
-      console.error("Error:", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+        console.error("Error:", error);
+        setErrorMessage("An unexpected error occurred. Please try again.");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   return (
     <div className="w-full">

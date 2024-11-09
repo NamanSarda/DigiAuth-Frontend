@@ -46,6 +46,7 @@ export default function RegisterCredentialForm() {
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
   const getUrl = () => {
+    // const baseUrl = "http://20.189.76.136:";
     const baseUrl = "http://localhost:";
     const ports = { User: "2025", Issuer: "1025", Verifier: "3025" };
     return baseUrl + (ports[role] || "");
