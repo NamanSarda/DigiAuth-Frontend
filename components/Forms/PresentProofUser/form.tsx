@@ -11,6 +11,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function PresentProofForm() {
   const [connections, setConnections] = useState([]);
@@ -23,6 +24,7 @@ export default function PresentProofForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [payload, setPayload] = useState("");
+  const [credId, setCredId] = useState("");
 
   // Loading states for connections and schemas
   const [connectionsLoading, setConnectionsLoading] = useState(true);
@@ -106,26 +108,26 @@ export default function PresentProofForm() {
 
   useEffect(() => {
     // Generate payload only when both connection and schema are selected
-    if (selectedConnection && selectedSchema && credentialDefinitionId) {
+    if (selectedConnection && selectedSchema && credId) {
       generatePayload();
     } else {
       setPayload("");
     }
-  }, [selectedSchema, credentialDefinitionId]);
+  }, [selectedSchema, credId, selectedConnection]);
 
   const generatePayload = () => {
     // Construct requested attributes dynamically
     const requestedAttributes = {};
     attributes.forEach((attr) => {
       requestedAttributes[attr] = {
-        cred_id: credentialDefinitionId, // Dynamically set the credential definition ID
+        cred_id: credId, // Dynamically set the credential definition ID
         revealed: true,
       };
     });
 
     const newPayload = {
       connection_id: selectedConnection,
-      autoremove: false,
+      auto_remove: false,
       indy: {
         requested_attributes: requestedAttributes,
         requested_predicates: {},
@@ -146,15 +148,18 @@ export default function PresentProofForm() {
     try {
       // Parse the payload from the textarea to ensure it's valid JSON
       const payloadToSend = JSON.parse(payload);
+      
+      console.log("Hello")
       console.log(payloadToSend);
-      const response = await fetch(`${getUrl()}/send-presentation`, {
+      // const response = await fetch(`${getUrl()}/send-presentation`, {
+      const response = await fetch(`http://localhost:2025/send-presentation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: payloadToSend,
+        body: JSON.stringify(payloadToSend),
       });
-
+      console.log(payloadToSend)
       if (!response.ok) {
         throw new Error("Failed to send presentation request");
       }
@@ -166,6 +171,17 @@ export default function PresentProofForm() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredId(e.target.value);
+  };
+
+  // Function to handle the button click
+  const handleButtonClick = () => {
+    console.log("Credential ID set:", credId);
+    // You can also perform any additional actions when the button is clicked
   };
 
   const renderConnectionDropdown = () => {
@@ -296,11 +312,21 @@ export default function PresentProofForm() {
           ))}
         </SelectContent>
       </Select>
-      {selectedConnection && selectedSchema && payload && (
+      <div className="flex w-full max-w-sm items-center space-x-2">
+      <Input
+        type="text"
+        placeholder="CredId"
+        value={credId} // Bind input value to credId state
+        onChange={handleInputChange} // Update state on input change
+      />
+      <Button onClick={handleButtonClick}>Set Cred Id</Button>
+    </div>
+      {selectedConnection && selectedSchema && payload && credId &&(
         <div className="mb-4">
           <Label className="text-white text-lg mb-2">Proof Present</Label>
           <Textarea
-            value={payload}
+            defaultValue={payload}
+            onChange={(e) => setPayload(e.target.value)} // Update the payload state on change
             className="w-full min-h-[20rem] font-mono bg-white/10 text-white"
             placeholder="Payload will be generated automatically"
           />

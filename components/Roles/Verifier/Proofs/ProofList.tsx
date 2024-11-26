@@ -5,19 +5,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-interface ProofRecord {
-  id: string;
-  type: string;
-  date: string;
-  details: { [key: string]: string }; // Customize this based on your API response
-}
+// interface ProofRecord {
+//   message: string;
+//   // type: string;
+//   // date: string;
+//   // details: { [key: string]: string }; // Customize this based on your API response
+// }
 
 export default function ProofList() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [proofList, setProofList] = useState<ProofRecord[]>([]);
+  const [proofList, setProofList] = useState<string>("");
 
   const role =
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
@@ -51,7 +51,8 @@ export default function ProofList() {
       const responseData = await response.json();
       console.log(responseData);
 
-      setProofList(responseData.records || []); // Assume `records` contains the list
+      // setProofList(responseData.records || []); // Assume `records` contains the list
+      setProofList(responseData.message);
       setSuccess(true);
       setEmail("");
     } catch (error) {
@@ -117,32 +118,33 @@ export default function ProofList() {
         {proofList.length === 0 ? (
           <p className="text-gray-300">No proofs available</p>
         ) : (
-          <ul className="space-y-4">
-            {proofList.map((proof, index) => (
-              <li
-                key={index}
-                className="p-4 bg-gray-800 text-white rounded-lg shadow"
-              >
-                <p>
-                  <strong>ID:</strong> {proof.id}
-                </p>
-                <p>
-                  <strong>Type:</strong> {proof.type}
-                </p>
-                <p>
-                  <strong>Date:</strong> {proof.date}
-                </p>
-                <p>
-                  <strong>Details:</strong>{" "}
-                  {Object.entries(proof.details).map(([key, value]) => (
-                    <span key={key}>
-                      {key}: {value},{" "}
-                    </span>
-                  ))}
-                </p>
-              </li>
-            ))}
-          </ul>
+            <h1>{proofList}</h1>
+          // <ul className="space-y-4">
+          //   {proofList.map((proof, index) => (
+          //     <li
+          //       key={index}
+          //       className="p-4 bg-gray-800 text-white rounded-lg shadow"
+          //     >
+          //       <p>
+          //         <strong>ID:</strong> {proof.id}
+          //       </p>
+          //       <p>
+          //         <strong>Type:</strong> {proof.type}
+          //       </p>
+          //       <p>
+          //         <strong>Date:</strong> {proof.date}
+          //       </p>
+          //       <p>
+          //         <strong>Details:</strong>{" "}
+          //         {Object.entries(proof.details).map(([key, value]) => (
+          //           <span key={key}>
+          //             {key}: {value},{" "}
+          //           </span>
+          //         ))}
+          //       </p>
+          //     </li>
+          //   ))}
+          // </ul>
         )}
       </div>
     </div>
