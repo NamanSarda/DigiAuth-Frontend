@@ -118,9 +118,9 @@ export default function ProofList() {
           <p className="text-gray-300">No proofs available</p>
         ) : (
           <ul className="space-y-4">
-            {proofList.map((proof) => (
+            {proofList.map((proof, index) => (
               <li
-                key={proof.id}
+                key={index}
                 className="p-4 bg-gray-800 text-white rounded-lg shadow"
               >
                 <p>

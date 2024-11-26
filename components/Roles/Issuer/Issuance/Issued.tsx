@@ -53,9 +53,9 @@ export default function Issued() {
       {certificates.length === 0 ? (
         <div>No issued certificates</div>
       ) : (
-        certificates.map((certificate) => (
+        certificates.map((certificate, index) => (
           <IssuedCard
-            key={certificate.cred_def_id}
+            key={index}
             cred_def_id={certificate.cred_def_id}
             Attr={certificate.attrs}
           />

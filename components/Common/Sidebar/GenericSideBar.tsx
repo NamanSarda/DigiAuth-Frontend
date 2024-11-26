@@ -44,9 +44,9 @@ const GenericSideBar: React.FC<SideBarProps> = ({
           <h1 className="text-white text-lg font-semibold">{role}</h1>
         </div>
         <nav className="space-y-4">
-          {navItems.map((item) => (
+          {navItems.map((item,index) => (
             <Button
-              key={item.key}
+              key={index}
               className={`w-full ${
                 activeNav === item.key
                   ? "bg-[#04202c] text-white"

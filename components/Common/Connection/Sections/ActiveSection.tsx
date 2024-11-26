@@ -78,9 +78,9 @@ export default function ActiveSection() {
       {connections.length === 0 ? (
         <div>No Active connections</div>
       ) : (
-        activeConnections.map((connection) => (
+        activeConnections.map((connection, index) => (
           <ConnectionCard
-            key={connection.ID}
+            key={index}
             ConnectionID={connection.ConnectionID}
             TheirMailID={connection.TheirMailID}
             ID={connection.ID}

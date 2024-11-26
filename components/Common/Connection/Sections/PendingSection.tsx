@@ -70,9 +70,9 @@ export default function PendingSection() {
       {connections.length === 0 ? (
         <div>No pending connections</div>
       ) : (
-        pendingConnections.map((connection) => (
+        pendingConnections.map((connection, index) => (
           <ConnectionCard
-            key={connection.ID}
+            key={index}
             ConnectionID={connection.ConnectionID}
             Alias={connection.Alias}
             ID={connection.ID}

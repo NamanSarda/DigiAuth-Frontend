@@ -215,11 +215,8 @@ export default function RegisterCredentialForm() {
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {connections.map((connection) => (
-            <SelectItem
-              key={connection.ConnectionID}
-              value={connection.ConnectionID}
-            >
+          {connections.map((connection, index) => (
+            <SelectItem key={index} value={connection.ConnectionID}>
               {connection.TheirMailID || connection.ConnectionID}
             </SelectItem>
           ))}
@@ -232,8 +229,8 @@ export default function RegisterCredentialForm() {
           <SelectValue placeholder="Select Schema" />
         </SelectTrigger>
         <SelectContent>
-          {schemas.map((schema) => (
-            <SelectItem key={schema} value={schema}>
+          {schemas.map((schema, index) => (
+            <SelectItem key={index} value={schema}>
               {schema}
             </SelectItem>
           ))}

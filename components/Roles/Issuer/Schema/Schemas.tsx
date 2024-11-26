@@ -66,9 +66,9 @@ export default function Schemas() {
       {schemas.length === 0 ? (
         <div>No defined schemas</div>
       ) : (
-        schemas.map((schema) => (
+        schemas.map((schema, index) => (
           <SchemaCard
-            key={schema}
+            key={index}
             // schemaName={schema.schemaName}
             schemaID={schema}
             // cred_def_id={schema.cred_def_id}

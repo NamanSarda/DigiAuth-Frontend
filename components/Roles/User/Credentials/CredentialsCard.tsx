@@ -64,7 +64,6 @@ export default function CredentialCard({
             title="Copy referent to clipboard"
           >
             {copied ? "✅" : "📋"}{" "}
-            {/* Clipboard symbol when not copied, check mark when copied */}
           </button>
         </p>
         <p className="text-md font-semibold">

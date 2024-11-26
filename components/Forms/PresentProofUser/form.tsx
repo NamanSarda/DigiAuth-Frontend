@@ -236,8 +236,8 @@ export default function PresentProofForm() {
           <SelectValue placeholder="Select Schema" />
         </SelectTrigger>
         <SelectContent>
-          {schemas.map((schema) => (
-            <SelectItem key={schema} value={schema}>
+          {schemas.map((schema, index) => (
+            <SelectItem key={index} value={schema}>
               {schema}
             </SelectItem>
           ))}
@@ -272,8 +272,8 @@ export default function PresentProofForm() {
           <SelectValue placeholder="Select Connection" />
         </SelectTrigger>
         <SelectContent>
-          {connections.map((conn) => (
-            <SelectItem key={conn.ConnectionID} value={conn.ConnectionID}>
+          {connections.map((conn, index) => (
+            <SelectItem key={index} value={conn.ConnectionID}>
               {conn.TheirMailID || conn.ConnectionID}
             </SelectItem>
           ))}
@@ -289,8 +289,8 @@ export default function PresentProofForm() {
           <SelectValue placeholder="Select Schema" />
         </SelectTrigger>
         <SelectContent>
-          {schemas.map((schema) => (
-            <SelectItem key={schema} value={schema}>
+          {schemas.map((schema, index) => (
+            <SelectItem key={(index)} value={schema}>
               {schema}
             </SelectItem>
           ))}
