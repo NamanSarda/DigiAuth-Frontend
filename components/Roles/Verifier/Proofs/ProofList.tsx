@@ -39,7 +39,7 @@ export default function ProofList() {
         their_mail_id: email,
       };
 
-      console.log(getUrl());
+      console.log(data);
       const response = await fetch(`${getUrl()}/recordsByUser`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -10,6 +10,7 @@ export default function AcceptNewInvitationForm() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   // const id = localStorage.getItem("id");
+  const my_mail_id = localStorage.getItem("email");
   const role =
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
@@ -37,23 +38,29 @@ export default function AcceptNewInvitationForm() {
     return () => clearTimeout(timer);
   }, [isSuccessful, form]);
 
+  function parseAndFormat(inputString) {
+    // Replace "\n" with actual newlines
+    const formattedString = inputString.replace(/\\n/g, "\n");
+
+    try {
+      // Attempt to parse as JSON if possible
+      const parsedObject = JSON.parse(formattedString);
+      console.log("Parsed JSON Object:", parsedObject);
+      return parsedObject;
+    } catch (error) {
+      console.log("Input is not valid JSON, returning formatted string.");
+      return formattedString;
+    }
+  }
+
   const handleSubmit = async (data: any) => {
     const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
     console.log("User ID:", id);
 
     // Parse the invite JSON string and merge its contents directly
-    let inviteData = {};
-    try {
-      inviteData = JSON.parse(data.invite);
-    } catch (error) {
-      console.error("Failed to parse invite JSON:", error);
-    }
-
-    // Merge id and inviteData into data, then delete the invite field
-    data = { ...data, id, ...inviteData };
-    delete data.invite; // Remove 'invite' from data
-    console.log("Request data:", data);
-
+    data = parseAndFormat(data.invite);
+    data = { my_mail_id, id, ...data };
+    console.log(data);
     setIsLoading(true);
     setErrorMessage("");
 
