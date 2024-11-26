@@ -4,8 +4,7 @@ import ConnectionCard from "../connectionCard";
 
 // Define the shape of your connection data
 interface Connection {
-
-  Alias: string;
+  TheirMailID: string;
   ConnectionID: string;
   ID: string;
   MyRole: string; // optional
@@ -19,7 +18,6 @@ export default function ActiveSection() {
 
   const role =
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
-
 
   const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
 
@@ -49,6 +47,7 @@ export default function ActiveSection() {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data);
         if (
           data === undefined ||
           data.connections === undefined ||
@@ -83,7 +82,7 @@ export default function ActiveSection() {
           <ConnectionCard
             key={connection.ID}
             ConnectionID={connection.ConnectionID}
-            Alias={connection.Alias}
+            TheirMailID={connection.TheirMailID}
             ID={connection.ID}
           />
         ))

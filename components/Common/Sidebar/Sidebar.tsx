@@ -21,14 +21,14 @@ export default function SideBar({
         return [
           ...commonItems,
           { key: "Credentials", label: "Credentials" },
-          { key: "ProofRequest", label: "Proof Request" },
+          { key: "PresentProof", label: "Present Proof" },
         ];
       case "Issuer":
         return [
           ...commonItems,
           { key: "Schema", label: "Schema" },
           { key: "Issuance", label: "Issuance" },
-          { key: "Revocation", label: "Revocation" },
+          // { key: "Revocation", label: "Revocation" },
         ];
       case "Verifier":
         return [

@@ -31,11 +31,12 @@ export default function Schemas() {
       try {
         const id = parseInt(localStorage.getItem("userid") ?? "0", 10);
         const response = await fetch(`${getUrl()}/created-schemas`);
-        
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const responseData = await response.json();
+        console.log(responseData);
         // Set the fetched data to state
         if (
           responseData === undefined ||
@@ -44,8 +45,7 @@ export default function Schemas() {
         ) {
         }
         setSchema(responseData.schema_ids);
-      }
-      catch (error) {
+      } catch (error) {
         // Set error message
         setError("Failed to fetch schema");
       } finally {

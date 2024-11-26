@@ -8,7 +8,7 @@ export default function RegisterCertificateForm() {
   const [schemaName, setSchemaName] = useState("");
   const [schemaVersion, setSchemaVersion] = useState("");
   const [attributes, setAttributes] = useState([{ name: "" }]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -26,7 +26,7 @@ export default function RegisterCertificateForm() {
     setAttributes([...attributes, { name: "" }]);
   };
 
-  const handleAttributeChange = (index, newValue) => {
+  const handleAttributeChange = (index: any, newValue: any) => {
     const updatedAttributes = [...attributes];
     updatedAttributes[index].name = newValue;
     setAttributes(updatedAttributes);
@@ -34,7 +34,7 @@ export default function RegisterCertificateForm() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    setError(null);
+    setError("");
     setSuccess(false);
     try {
       const data = {
@@ -42,13 +42,13 @@ export default function RegisterCertificateForm() {
         schema_name: schemaName,
         schema_version: schemaVersion,
       };
-        const response = await fetch(`${getUrl()}/register-certificate`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        
-        if (!response.ok) throw new Error("Network response was not ok");
+      const response = await fetch(`${getUrl()}/register-certificate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Network response was not ok");
       // console.log(data);
 
       setSuccess(true);

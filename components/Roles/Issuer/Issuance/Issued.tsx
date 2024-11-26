@@ -4,7 +4,7 @@ import IssuedCard from "./issuedCard";
 
 // Define the shape of your Certificates data
 interface Certificate {
-  attrs: { [key: string]: string };  // Assuming Attr is a key-value pair object
+  attrs: { [key: string]: string }; // Assuming Attr is a key-value pair object
   cred_def_id: string;
 }
 
@@ -23,20 +23,20 @@ export default function Issued() {
   useEffect(() => {
     const fetchCertificates = async () => {
       try {
-  //       // Replace with your API endpoint
-        const response = await fetch(`${getUrl()}/credentials`)
-            if (!response.ok) {
+        //       // Replace with your API endpoint
+        const response = await fetch(`${getUrl()}/credentials`);
+        if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
         // Set the fetched data to state
-        console.log(data.results)
+        console.log(data.results);
         setCertificates(data.results);
       } catch (error) {
         // Set error message
         setError("Failed to fetch certificates");
       } finally {
-  //       // Set loading to false
+        // Set loading to false
         setLoading(false);
       }
     };
@@ -44,7 +44,7 @@ export default function Issued() {
     fetchCertificates();
   }, []);
 
-  // // Render loading, error, or the list of certificates
+  // Render loading, error, or the list of certificates
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 

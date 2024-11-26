@@ -5,11 +5,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function CreateInvitationForm() {
+interface ProofRecord {
+  id: string;
+  type: string;
+  date: string;
+  details: { [key: string]: string }; // Customize this based on your API response
+}
+
+export default function ProofListForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [proofList, setProofList] = useState<ProofRecord[]>([]);
+
   const role =
     (localStorage.getItem("role") as "User" | "Issuer" | "Verifier") || "";
 
@@ -26,44 +35,43 @@ export default function CreateInvitationForm() {
 
     try {
       const data = {
-        id: parseInt(localStorage.getItem("userid") ?? "0", 10),
         my_mail_id: localStorage.getItem("email"),
         their_mail_id: email,
       };
 
       console.log(getUrl());
-      const response = await fetch(`${getUrl()}/send-invitation`, {
+      const response = await fetch(`${getUrl()}/recordsByUser`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) throw new Error("Failed to send invite");
+      if (!response.ok) throw new Error("Failed to fetch proof list");
 
       const responseData = await response.json();
       console.log(responseData);
 
+      setProofList(responseData.records || []); // Assume `records` contains the list
       setSuccess(true);
       setEmail("");
     } catch (error) {
       console.error(error);
-      setError("Failed to send invitation. Please try again.");
+      setError("Failed to fetch proof list. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Automatically hide the success message after 3 seconds
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => setSuccess(false), 3000);
-      return () => clearTimeout(timer); // Cleanup timer on component unmount
+      return () => clearTimeout(timer);
     }
   }, [success]);
 
   return (
-    <div className="ml-6 p-8 shadow-lg max-h-[35rem] w-[24rem] rounded-xl bg-[#334a5f]">
-      <h1 className="text-white text-2xl mb-4 text-center">Send Invitation</h1>
+    <div className="p-8 shadow-lg rounded-xl bg-[#334a5f]">
+      <h1 className="text-white text-2xl mb-4 text-center">Fetch Proof List</h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -77,7 +85,7 @@ export default function CreateInvitationForm() {
         <Alert variant="success" className="mb-4">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Success</AlertTitle>
-          <AlertDescription>Invitation sent successfully!</AlertDescription>
+          <AlertDescription>Proof list fetched successfully!</AlertDescription>
         </Alert>
       )}
 
@@ -100,8 +108,43 @@ export default function CreateInvitationForm() {
         className="w-full bg-[#2E8A99]"
         disabled={loading || !email.trim()}
       >
-        {loading ? "Sending..." : "Send Invitation"}
+        {loading ? "Fetching Proof List..." : "Fetch Proof List"}
       </Button>
+
+      {/* Render the proof list */}
+      <div className="mt-6">
+        <h2 className="text-white text-lg mb-2">Proof List:</h2>
+        {proofList.length === 0 ? (
+          <p className="text-gray-300">No proofs available</p>
+        ) : (
+          <ul className="space-y-4">
+            {proofList.map((proof) => (
+              <li
+                key={proof.id}
+                className="p-4 bg-gray-800 text-white rounded-lg shadow"
+              >
+                <p>
+                  <strong>ID:</strong> {proof.id}
+                </p>
+                <p>
+                  <strong>Type:</strong> {proof.type}
+                </p>
+                <p>
+                  <strong>Date:</strong> {proof.date}
+                </p>
+                <p>
+                  <strong>Details:</strong>{" "}
+                  {Object.entries(proof.details).map(([key, value]) => (
+                    <span key={key}>
+                      {key}: {value},{" "}
+                    </span>
+                  ))}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
